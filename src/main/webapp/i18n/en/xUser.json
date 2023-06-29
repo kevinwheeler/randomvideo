@@ -1,0 +1,26 @@
+{
+  "randomvideoApp": {
+    "xUser": {
+      "home": {
+        "title": "X Users",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new X User",
+        "createOrEditLabel": "Create or edit a X User",
+        "notFound": "No X Users found"
+      },
+      "created": "A new X User is created with identifier {{ param }}",
+      "updated": "A X User is updated with identifier {{ param }}",
+      "deleted": "A X User is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete X User {{ id }}?"
+      },
+      "detail": {
+        "title": "X User"
+      },
+      "id": "ID",
+      "videoListUrlSlug": "Video List Url Slug",
+      "internalUser": "Internal User",
+      "videoList": "Video List"
+    }
+  }
+}

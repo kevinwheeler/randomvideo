@@ -154,4 +154,5 @@ Desktop.ini
 # Things added ourselves
 # (not by JHipster)
 ######################
+.env
 .env.sh

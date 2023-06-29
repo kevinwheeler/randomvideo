@@ -1,0 +1,26 @@
+{
+  "randomvideoApp": {
+    "videoList": {
+      "home": {
+        "title": "VideoLists",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Video List",
+        "createOrEditLabel": "Créer ou éditer un Video List",
+        "notFound": "Aucun Video List trouvé"
+      },
+      "created": "Un nouveau Video List a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Video List avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Video List avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Video List {{ id }} ?"
+      },
+      "detail": {
+        "title": "Video List"
+      },
+      "id": "ID",
+      "videoListUrlSlug": "Video List Url Slug",
+      "video": "Video",
+      "xUser": "X User"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity VideoList.
+    -->
+    <changeSet id="20230629034102-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="video_list_id"
+                                 baseTableName="rel_video_list__video"
+                                 constraintName="fk_rel_video_list__video__video_list_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="video_list"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="video_id"
+                                 baseTableName="rel_video_list__video"
+                                 constraintName="fk_rel_video_list__video__video_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="video"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="x_user_id"
+                                 baseTableName="video_list"
+                                 constraintName="fk_video_list__x_user_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="x_user"
+                                 />
+    </changeSet>
+</databaseChangeLog>

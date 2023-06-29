@@ -1,0 +1,22 @@
+{
+  "applications": "*",
+  "changelogDate": "20230629034103",
+  "entityTableName": "video",
+  "fields": [
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Video",
+  "relationships": [
+    {
+      "otherEntityName": "videoList",
+      "otherEntityRelationshipName": "video",
+      "relationshipName": "videoList",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

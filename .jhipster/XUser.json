@@ -1,0 +1,29 @@
+{
+  "applications": "*",
+  "changelogDate": "20230629034101",
+  "entityTableName": "x_user",
+  "fields": [
+    {
+      "fieldName": "videoListUrlSlug",
+      "fieldType": "String"
+    }
+  ],
+  "name": "XUser",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "internalUser",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "videoList",
+      "otherEntityRelationshipName": "xUser",
+      "relationshipName": "videoList",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

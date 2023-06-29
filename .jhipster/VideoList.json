@@ -1,0 +1,29 @@
+{
+  "applications": "*",
+  "changelogDate": "20230629034102",
+  "entityTableName": "video_list",
+  "fields": [
+    {
+      "fieldName": "videoListUrlSlug",
+      "fieldType": "String"
+    }
+  ],
+  "name": "VideoList",
+  "relationships": [
+    {
+      "otherEntityName": "video",
+      "otherEntityRelationshipName": "videoList",
+      "relationshipName": "video",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "xUser",
+      "otherEntityRelationshipName": "videoList",
+      "relationshipName": "xUser",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

@@ -1,0 +1,29 @@
+entity Video {
+	url String
+}
+
+/*
+* Any additional data/fields/relationships aren't supposed to go into the 
+* User entity that JHipster creates by default and uses internally, so we put them here.
+* We call this entity XUser for External User, because this entity is external
+* to the one JHipster creates uses internally.
+*/
+entity XUser {
+	videoListUrlSlug String
+}
+
+entity VideoList {
+	videoListUrlSlug String
+}
+
+relationship OneToMany {
+  XUser{videoList} to VideoList{xUser}
+}
+
+relationship ManyToMany {
+	VideoList{video} to Video{videoList}
+}
+
+relationship OneToOne {
+  XUser{internalUser} to User with builtInEntity
+} 
