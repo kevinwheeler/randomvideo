@@ -70,7 +70,7 @@
         <profile.tls/>
         <properties-maven-plugin.version>1.1.0</properties-maven-plugin.version>
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
-        <validation-api.version>3.0.2.Final</validation-api.version>
+        <validation-api.version>3.0.2</validation-api.version>
     </properties>
 
     <dependencyManagement>
@@ -759,8 +759,10 @@
                     <artifactId>liquibase-maven-plugin</artifactId>
                     <version>${liquibase.version}</version>
                     <configuration>
-                        <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>
-                        <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
+<!--                        <changeLogFile>${project.basedir}/src/main/resources/config/liquibase/master.xml</changeLogFile>-->
+<!--                        <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>-->
+                        <changeLogFile>/config/liquibase/master.xml</changeLogFile>
+                        <diffChangeLogFile>/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
                         <driver>com.mysql.cj.jdbc.Driver</driver>
                         <url>${liquibase-plugin.url}</url>
                         <defaultSchemaName/>
