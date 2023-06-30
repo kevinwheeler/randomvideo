@@ -278,6 +278,7 @@
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
+        <finalName>randomvideo</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -821,7 +822,7 @@
                 <!-- default Spring profiles -->
                 <spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
                 <profile.test>testdev</profile.test>
-                <liquibase-plugin.url>jdbc:mysql://localhost:3306/randomvideo</liquibase-plugin.url>
+                <liquibase-plugin.url>jdbc:mysql://localhost:3306/randomVideo</liquibase-plugin.url>
                 <liquibase-plugin.username>${env.DB_USERNAME}</liquibase-plugin.username>
                 <liquibase-plugin.password>${env.DB_PASSWORD}</liquibase-plugin.password>
             </properties>
