@@ -86,11 +86,6 @@
     </dependencyManagement>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>jul-to-slf4j</artifactId>-->
-<!--&lt;!&ndash;            <version>${slf4j.version}</version>&ndash;&gt;-->
-<!--        </dependency>-->
         <dependency>
             <groupId>tech.jhipster</groupId>
             <artifactId>jhipster-framework</artifactId>
