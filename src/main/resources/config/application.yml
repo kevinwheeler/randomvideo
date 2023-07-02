@@ -14,6 +14,15 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+logging:
+  level:
+    ROOT: DEBUG
+    org.apache: DEBUG
+    org.apache.tomcat: DEBUG
+    org.hibernate.SQL: DEBUG
+    site.randomvideo: DEBUG
+    tech.jhipster: DEBUG
+    org.apache.catalina: DEBUG
 ---
 # Conditionally disable springdoc on missing api-docs profile
 spring:
@@ -157,6 +166,15 @@ server:
     session:
       cookie:
         http-only: true
+  tomcat:
+    accesslog:
+      directory: /Users/kevinwheeler/programmingStuff/webApps/randomvideo/logs
+      enabled: true
+      prefix: access-log
+      suffix: .log
+      file-date-format: .yyyy-MM-dd
+      pattern: common
+    basedir: target
 
 springdoc:
   show-actuator: true

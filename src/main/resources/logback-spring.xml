@@ -1,37 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE configuration>
 
+<!-- Adapted from https://stackoverflow.com/questions/30193054/jhipster-log-files-->
 <configuration scan="true">
-    <!-- Patterns based on https://github.com/spring-projects/spring-boot/blob/v3.0.0/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml -->
-    <conversionRule conversionWord="crlf" converterClass="site.randomvideo.config.CRLFLogConverter" />
-    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %crlf(%m){red} %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
-    <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+
+    <!-- Write logs to Tomcat instance logs directory or current directory -->
+    <property name="LOG_ROOT"            value="${CATALINA_BASE:-.}"/>
+    <property name="LOG_PATH"            value="${LOG_ROOT}/logs"/>
+    <property name="LOG_ARCHIVE_PREFIX"  value="${LOG_PATH}/APPID-%d{yyyy-MM-dd}-"/>
+    <property name="LOG_ARCHIVE_DAYS"    value="5"/>
+
+    <!-- Patterns assume Servlet Filter adds values to MDC for: IP=IP Address, S=Session Id, TX=Transaction Id, U=User Id.  eg org.slf4j.MDC.put("TX", java.util.UUID.randomUUID().toString());  -->
+    <!--    <property name="LOG_PATTERN"         value="%date{HH:mm:ss.SSS} ,ip=%-16.16X{IP} ,s=%-32.32X{S} ,x=%-30.30X{TX} ,l=%-5.5level ,u=%-12.12X{U} ,c=%-30.30logger{0} ,f=%-20.20method ,t=%-15.15t ,m=%-80m ,cf=%logger %n"/>-->
+    <!--    <property name="CONSOLE_LOG_PATTERN" value="%date{HH:mm:ss.SSS} ,ip=%-3.3X{IP} ,s=%-8.8X{S} ,x=%-8.8X{TX} ,l=%-5.5level ,u=%-8.8X{U} ,c=%-30.30logger{0} ,f=%-20.20method ,t=%-10.10t ,m=%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>-->
+    <property name="LOG_PATTERN" value="%date{YYYY-MM-dd HH:mm:ss.SSS} ,IPAddress=%-16.16X{IP} ,SessionId=%-32.32X{S} ,TransactionId=%-30.30X{TX} ,LogLevel=%-5.5level ,UserId=%-12.12X{U} ,Logger=%-30.30logger{0} ,Method=%-20.20method ,Thread=%-15.15t ,Message=%-80m ,LoggerAlias=%logger %n"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%date{YYYY-MM-dd HH:mm:ss.SSS} ,IPAddress=%-3.3X{IP} ,SessionId=%-8.8X{S} ,TransactionId=%-8.8X{TX} ,LogLevel=%-5.5level ,UserId=%-8.8X{U} ,Logger=%-30.30logger{0} ,Method=%-20.20method ,Thread=%-10.10t ,Message=%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+
     <!--
-    <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } &#45;&#45;&#45; [%t] %-40.40logger{39} : %crlf(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(- - -){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+  <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } - - - [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+  -->
+
+    <!--    <appender name="DEBUG_LEVEL_REMAPPER" class="org.springframework.boot.logging.logback.LevelRemappingAppender">-->
+    <!--        <destinationLogger>org.springframework.boot</destinationLogger>-->
+    <!--    </appender>-->
+
+    <logger name="org.apache.catalina.startup.DigesterFactory" level="ERROR"/>
+    <logger name="org.apache.catalina.util.LifecycleBase" level="ERROR"/>
+    <logger name="org.apache.coyote.http11.Http11NioProtocol" level="WARN"/>
+    <logger name="org.apache.sshd.common.util.SecurityUtils" level="WARN"/>
+    <logger name="org.apache.tomcat.util.net.NioSelectorPool" level="WARN"/>
+    <logger name="org.crsh.plugin" level="WARN"/>
+    <logger name="org.crsh.ssh" level="WARN"/>
+    <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
+    <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
+    <logger name="org.springframework.boot.actuate.autoconfigure.CrshAutoConfiguration" level="WARN"/>
+    <!--    <logger name="org.springframework.boot.actuate.endpoint.jmx" additivity="false">-->
+    <!--        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>-->
+    <!--    </logger>-->
+    <!--    <logger name="org.thymeleaf" additivity="false">-->
+    <!--        <appender-ref ref="DEBUG_LEVEL_REMAPPER"/>-->
+    <!--    </logger>-->
+    <logger name="org.springframework.boot.actuate.endpoint.jmx" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+
+
+    <!--	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/> -->
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    <!--
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <encoder>
+                <pattern>${FILE_LOG_PATTERN}</pattern>
+            </encoder>
+            <file>${LOG_FILE}</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+                <fileNamePattern>${LOG_FILE}.%i</fileNamePattern>
+            </rollingPolicy>
+            <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>10MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
     -->
 
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"><File>${LOG_PATH}/debug.log</File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <encoder><charset>utf-8</charset><pattern>${LOG_PATTERN}</pattern></encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><FileNamePattern>${LOG_ARCHIVE_PREFIX}debug.log</FileNamePattern><maxHistory>${LOG_ARCHIVE_DAYS}</maxHistory></rollingPolicy>
+    </appender>
 
-    <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
-    <!--
-    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"><File>${LOG_PATH}/info.log</File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <encoder><charset>utf-8</charset><pattern>${LOG_PATTERN}</pattern></encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><FileNamePattern>${LOG_ARCHIVE_PREFIX}info.log</FileNamePattern><maxHistory>${LOG_ARCHIVE_DAYS}</maxHistory></rollingPolicy>
+    </appender>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"><File>${LOG_PATH}/error.log</File>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>DENY</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
+        <encoder><charset>utf-8</charset><pattern>${LOG_PATTERN}${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern></encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"><FileNamePattern>${LOG_ARCHIVE_PREFIX}error.log</FileNamePattern><maxHistory>${LOG_ARCHIVE_DAYS}</maxHistory></rollingPolicy>
+    </appender>
 
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>512</queueSize>
-        <appender-ref ref="FILE"/>
+        <appender-ref ref="INFO_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+        <appender-ref ref="DEBUG_FILE"/>
     </appender>
 
-    <root level="${logging.level.root}">
-        <appender-ref ref="ASYNC"/>
-    </root>
-    -->
+    <!--    <logger name="com.theice.asdlc" level="#logback.loglevel#"/>-->
+    <logger name="com.theice.asdlc"/>
 
     <logger name="jakarta.activation" level="WARN"/>
     <logger name="jakarta.mail" level="WARN"/>
     <logger name="jakarta.management.remote" level="WARN"/>
     <logger name="jakarta.xml.bind" level="WARN"/>
     <logger name="jdk.event.security" level="INFO"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.codahale.metrics" level="WARN"/>
     <logger name="com.ryantenney" level="WARN"/>
     <logger name="com.sun" level="WARN"/>
     <logger name="com.zaxxer" level="WARN"/>
@@ -52,19 +185,25 @@
     <logger name="org.thymeleaf" level="WARN"/>
     <logger name="org.xnio" level="WARN"/>
     <logger name="io.swagger.v3" level="INFO"/>
+    <logger name="springfox" level="WARN"/>
     <logger name="sun.rmi" level="WARN"/>
     <logger name="sun.rmi.transport" level="WARN"/>
+
     <!-- See https://github.com/jhipster/generator-jhipster/issues/13835 -->
     <logger name="Validator" level="INFO"/>
     <!-- See https://github.com/jhipster/generator-jhipster/issues/14444 -->
-    <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="INFO"/>
+    <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="DEBUG"/>
     <logger name="liquibase" level="WARN"/>
     <logger name="LiquibaseSchemaResolver" level="INFO"/>
     <!-- jhipster-needle-logback-add-log - JHipster will add a new log with level -->
 
     <springProperty name="log.level" source="logging.level.root" defaultValue="INFO" />
+
     <root level="${log.level}">
         <appender-ref ref="CONSOLE" />
+        <appender-ref ref="DEBUG_FILE" />
+        <appender-ref ref="INFO_FILE" />
+        <appender-ref ref="ERROR_FILE" />
     </root>
 
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
@@ -72,3 +211,4 @@
     </contextListener>
 
 </configuration>
+

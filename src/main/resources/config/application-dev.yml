@@ -16,9 +16,12 @@
 logging:
   level:
     ROOT: DEBUG
-    tech.jhipster: DEBUG
+    org.apache: DEBUG
+    org.apache.tomcat: DEBUG
     org.hibernate.SQL: DEBUG
     site.randomvideo: DEBUG
+    tech.jhipster: DEBUG
+    org.apache.catalina: DEBUG
 
 spring:
   devtools:
@@ -60,6 +63,17 @@ spring:
 
 server:
   port: 8080
+  tomcat:
+    accesslog:
+      directory: /Users/kevinwheeler/programmingStuff/webApps/randomvideo/logs
+      enabled: true
+      prefix: access-log
+      suffix: .log
+      file-date-format: .yyyy-MM-dd
+#      pattern: "%t %a %r %s (%D ms)"
+#      pattern: common
+#    basedir: target
+    basedir: /Users/kevinwheeler/programmingStuff/webApps/randomvideo/logs
 
 # ===================================================================
 # JHipster specific properties
