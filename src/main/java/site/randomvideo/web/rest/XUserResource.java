@@ -45,7 +45,7 @@ public class XUserResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new xUser, or with status {@code 400 (Bad Request)} if the xUser has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/x-users")
+//    @PostMapping("/x-users")
     public ResponseEntity<XUser> createXUser(@RequestBody XUser xUser) throws URISyntaxException {
         log.debug("REST request to save XUser : {}", xUser);
         if (xUser.getId() != null) {
@@ -68,7 +68,7 @@ public class XUserResource {
      * or with status {@code 500 (Internal Server Error)} if the xUser couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/x-users/{id}")
+//    @PutMapping("/x-users/{id}")
     public ResponseEntity<XUser> updateXUser(@PathVariable(value = "id", required = false) final Long id, @RequestBody XUser xUser)
         throws URISyntaxException {
         log.debug("REST request to update XUser : {}, {}", id, xUser);
@@ -101,7 +101,7 @@ public class XUserResource {
      * or with status {@code 500 (Internal Server Error)} if the xUser couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/x-users/{id}", consumes = { "application/json", "application/merge-patch+json" })
+//    @PatchMapping(value = "/x-users/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<XUser> partialUpdateXUser(@PathVariable(value = "id", required = false) final Long id, @RequestBody XUser xUser)
         throws URISyntaxException {
         log.debug("REST request to partial update XUser partially : {}, {}", id, xUser);
@@ -138,7 +138,7 @@ public class XUserResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of xUsers in body.
      */
-    @GetMapping("/x-users")
+//    @GetMapping("/x-users")
     public List<XUser> getAllXUsers() {
         log.debug("REST request to get all XUsers");
         return xUserRepository.findAll();
@@ -150,7 +150,7 @@ public class XUserResource {
      * @param id the id of the xUser to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the xUser, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/x-users/{id}")
+//    @GetMapping("/x-users/{id}")
     public ResponseEntity<XUser> getXUser(@PathVariable Long id) {
         log.debug("REST request to get XUser : {}", id);
         Optional<XUser> xUser = xUserRepository.findById(id);
@@ -163,7 +163,7 @@ public class XUserResource {
      * @param id the id of the xUser to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/x-users/{id}")
+//    @DeleteMapping("/x-users/{id}")
     public ResponseEntity<Void> deleteXUser(@PathVariable Long id) {
         log.debug("REST request to delete XUser : {}", id);
         xUserRepository.deleteById(id);
