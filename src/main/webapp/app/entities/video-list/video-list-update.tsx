@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { IVideo } from 'app/shared/model/video.model';
 import { getEntities as getVideos } from 'app/entities/video/video.reducer';
 import { IXUser } from 'app/shared/model/x-user.model';
-import { getEntities as getXUsers } from 'app/entities/x-user/x-user.reducer';
+// import { getEntities as getXUsers } from 'app/entities/x-user/x-user.reducer';
 import { IVideoList } from 'app/shared/model/video-list.model';
 import { getEntity, updateEntity, createEntity, reset } from './video-list.reducer';
 
@@ -24,11 +24,12 @@ export const VideoListUpdate = () => {
   const isNew = id === undefined;
 
   const videos = useAppSelector(state => state.video.entities);
-  const xUsers = useAppSelector(state => state.xUser.entities);
+  // const xUsers = useAppSelector(state => state.xUser.entities);
   const videoListEntity = useAppSelector(state => state.videoList.entity);
   const loading = useAppSelector(state => state.videoList.loading);
   const updating = useAppSelector(state => state.videoList.updating);
   const updateSuccess = useAppSelector(state => state.videoList.updateSuccess);
+  const account = useAppSelector(state => state.authentication.account);
 
   const handleClose = () => {
     navigate('/video-list');
@@ -42,7 +43,7 @@ export const VideoListUpdate = () => {
     }
 
     dispatch(getVideos({}));
-    dispatch(getXUsers({}));
+    // dispatch(getXUsers({}));
   }, []);
 
   useEffect(() => {
@@ -56,7 +57,10 @@ export const VideoListUpdate = () => {
       ...videoListEntity,
       ...values,
       videos: mapIdList(values.videos),
-      xUser: xUsers.find(it => it.id.toString() === values.xUser.toString()),
+      // xUser: xUsers.find(it => it.id.toString() === values.xUser.toString()),
+      // TODO should we just send the xUser id?
+      xUserId: account.id
+
     };
 
     if (isNew) {
@@ -124,7 +128,7 @@ export const VideoListUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              <ValidatedField
+              {/* <ValidatedField
                 id="video-list-xUser"
                 name="xUser"
                 data-cy="xUser"
@@ -139,7 +143,7 @@ export const VideoListUpdate = () => {
                       </option>
                     ))
                   : null}
-              </ValidatedField>
+              </ValidatedField> */}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/video-list" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

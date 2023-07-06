@@ -138,7 +138,7 @@ public class XUserResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of xUsers in body.
      */
-//    @GetMapping("/x-users")
+    @GetMapping("/x-users")
     public List<XUser> getAllXUsers() {
         log.debug("REST request to get all XUsers");
         return xUserRepository.findAll();
