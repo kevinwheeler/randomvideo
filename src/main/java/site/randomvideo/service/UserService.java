@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import site.randomvideo.config.Constants;
 import site.randomvideo.domain.Authority;
 import site.randomvideo.domain.User;
+import site.randomvideo.domain.XUser;
 import site.randomvideo.repository.AuthorityRepository;
 import site.randomvideo.repository.UserRepository;
+import site.randomvideo.repository.XUserRepository;
 import site.randomvideo.security.AuthoritiesConstants;
 import site.randomvideo.security.SecurityUtils;
 import site.randomvideo.service.dto.AdminUserDTO;
@@ -31,23 +33,23 @@ import tech.jhipster.security.RandomUtil;
 @Transactional
 public class UserService {
 
+    private final AuthorityRepository authorityRepository;
+    private final CacheManager cacheManager;
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-    private final AuthorityRepository authorityRepository;
-
-    private final CacheManager cacheManager;
+    private final UserRepository userRepository;
+    private final XUserRepository xUserRepository;
 
     public UserService(
         UserRepository userRepository,
+        XUserRepository xUserRepository,
         PasswordEncoder passwordEncoder,
         AuthorityRepository authorityRepository,
         CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
+        this.xUserRepository = xUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
@@ -129,7 +131,13 @@ public class UserService {
         Set<Authority> authorities = new HashSet<>();
         authorityRepository.findById(AuthoritiesConstants.USER).ifPresent(authorities::add);
         newUser.setAuthorities(authorities);
+
+        XUser newXUser = new XUser();
+        newXUser.setInternalUser(newUser);
+
+        xUserRepository.save(newXUser);
         userRepository.save(newUser);
+
         this.clearUserCaches(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;

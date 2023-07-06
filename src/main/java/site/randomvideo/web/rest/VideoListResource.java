@@ -8,12 +8,18 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import site.randomvideo.domain.User;
 import site.randomvideo.domain.VideoList;
+import site.randomvideo.repository.XUserRepository;
+import site.randomvideo.repository.UserRepository;
 import site.randomvideo.repository.VideoListRepository;
+import site.randomvideo.service.UserService;
 import site.randomvideo.web.rest.errors.BadRequestAlertException;
+import site.randomvideo.web.rest.errors.UserNotLoggedInException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -33,9 +39,16 @@ public class VideoListResource {
     private String applicationName;
 
     private final VideoListRepository videoListRepository;
+    private final UserService userService;
 
-    public VideoListResource(VideoListRepository videoListRepository) {
+    private final XUserRepository xUserRepository;
+
+
+
+    public VideoListResource(VideoListRepository videoListRepository, UserRepository userRepository, UserService userService, XUserRepository xUserRepository) {
         this.videoListRepository = videoListRepository;
+        this.userService = userService;
+        this.xUserRepository = xUserRepository;
     }
 
     /**
@@ -44,6 +57,7 @@ public class VideoListResource {
      * @param videoList the videoList to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new videoList, or with status {@code 400 (Bad Request)} if the videoList has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws UserNotLoggedInException if the user is not logged in.
      */
     @PostMapping("/video-lists")
     public ResponseEntity<VideoList> createVideoList(@RequestBody VideoList videoList) throws URISyntaxException {
@@ -51,6 +65,10 @@ public class VideoListResource {
         if (videoList.getId() != null) {
             throw new BadRequestAlertException("A new videoList cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
+        videoList.setXUser(xUserRepository.findOneByInternalUserId(currentUser.getId()).get());
+
         VideoList result = videoListRepository.save(videoList);
         return ResponseEntity
             .created(new URI("/api/video-lists/" + result.getId()))
@@ -85,6 +103,14 @@ public class VideoListResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
+        VideoList currentVideoList = videoListRepository.findById(id).get();
+        if (currentVideoList.getXUser().getInternalUser().getId() != currentUser.getId()) {
+//            throw new BadRequestAlertException("You are not allowed to edit this video list", ENTITY_NAME, "notallowed");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        videoList.setXUser(xUserRepository.findOneByInternalUserId(currentUser.getId()).get());
         VideoList result = videoListRepository.save(videoList);
         return ResponseEntity
             .ok()
@@ -103,7 +129,9 @@ public class VideoListResource {
      * or with status {@code 500 (Internal Server Error)} if the videoList couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/video-lists/{id}", consumes = { "application/json", "application/merge-patch+json" })
+//     commented out since we aren't using it currently. If we need it later, we'll need
+//     to make sure only the owner of the video list can update it.
+//    @PatchMapping(value = "/video-lists/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<VideoList> partialUpdateVideoList(
         @PathVariable(value = "id", required = false) final Long id,
         @RequestBody VideoList videoList
@@ -175,6 +203,14 @@ public class VideoListResource {
     @DeleteMapping("/video-lists/{id}")
     public ResponseEntity<Void> deleteVideoList(@PathVariable Long id) {
         log.debug("REST request to delete VideoList : {}", id);
+
+        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
+        VideoList videoListToDelete = videoListRepository.findById(id).get();
+        if (videoListToDelete.getXUser().getInternalUser().getId() != currentUser.getId()) {
+//            throw new BadRequestAlertException("You are not allowed to delete this video list", ENTITY_NAME, "notallowed");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         videoListRepository.deleteById(id);
         return ResponseEntity
             .noContent()
