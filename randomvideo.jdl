@@ -1,5 +1,11 @@
 entity Video {
-	url String
+	url String required minlength(11) maxlength(300) pattern(/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[^\s]+$/),
+    name String required minlength(1) maxlength(50)
+}
+
+entity VideoList {
+    name String required minlength(1) maxlength(50)
+    slug String required minlength(1) maxlength(50) unique
 }
 
 /*
@@ -9,15 +15,15 @@ entity Video {
 * to the one JHipster creates uses internally.
 */
 entity XUser {
-	videoListUrlSlug String
 }
 
-entity VideoList {
-	videoListUrlSlug String
-}
 
 relationship OneToMany {
   XUser{videoList} to VideoList{xUser}
+}
+
+relationship OneToMany {
+  XUser{video} to Video{xUser}
 }
 
 relationship ManyToMany {
@@ -27,3 +33,4 @@ relationship ManyToMany {
 relationship OneToOne {
   XUser{internalUser} to User with builtInEntity
 } 
+

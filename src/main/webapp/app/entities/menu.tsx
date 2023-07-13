@@ -7,9 +7,6 @@ const EntitiesMenu = () => {
   return (
     <>
       {/* prettier-ignore */}
-      <MenuItem icon="asterisk" to="/x-user">
-        <Translate contentKey="global.menu.entities.xUser" />
-      </MenuItem>
       <MenuItem icon="asterisk" to="/video-list">
         <Translate contentKey="global.menu.entities.videoList" />
       </MenuItem>
