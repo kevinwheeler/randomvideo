@@ -1,5 +1,7 @@
 package site.randomvideo.web.rest;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -46,7 +48,7 @@ public class VideoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/videos")
-    public ResponseEntity<Video> createVideo(@RequestBody Video video) throws URISyntaxException {
+    public ResponseEntity<Video> createVideo(@Valid @RequestBody Video video) throws URISyntaxException {
         log.debug("REST request to save Video : {}", video);
         if (video.getId() != null) {
             throw new BadRequestAlertException("A new video cannot already have an ID", ENTITY_NAME, "idexists");
@@ -69,7 +71,7 @@ public class VideoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/videos/{id}")
-    public ResponseEntity<Video> updateVideo(@PathVariable(value = "id", required = false) final Long id, @RequestBody Video video)
+    public ResponseEntity<Video> updateVideo(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody Video video)
         throws URISyntaxException {
         log.debug("REST request to update Video : {}, {}", id, video);
         if (video.getId() == null) {
@@ -102,8 +104,10 @@ public class VideoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/videos/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<Video> partialUpdateVideo(@PathVariable(value = "id", required = false) final Long id, @RequestBody Video video)
-        throws URISyntaxException {
+    public ResponseEntity<Video> partialUpdateVideo(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody Video video
+    ) throws URISyntaxException {
         log.debug("REST request to partial update Video partially : {}, {}", id, video);
         if (video.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -121,6 +125,9 @@ public class VideoResource {
             .map(existingVideo -> {
                 if (video.getUrl() != null) {
                     existingVideo.setUrl(video.getUrl());
+                }
+                if (video.getName() != null) {
+                    existingVideo.setName(video.getName());
                 }
 
                 return existingVideo;

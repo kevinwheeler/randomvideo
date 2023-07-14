@@ -2,6 +2,7 @@ package site.randomvideo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +25,20 @@ public class Video implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "url")
+    @NotNull
+    @Size(min = 11, max = 300)
+    @Pattern(regexp = "^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)[^\\s]+$")
+    @Column(name = "url", length = 300, nullable = false)
     private String url;
+
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "internalUser", "videoLists", "videos" }, allowSetters = true)
+    private XUser xUser;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "videos")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -58,6 +71,32 @@ public class Video implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Video name(String name) {
+        this.setName(name);
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public XUser getXUser() {
+        return this.xUser;
+    }
+
+    public void setXUser(XUser xUser) {
+        this.xUser = xUser;
+    }
+
+    public Video xUser(XUser xUser) {
+        this.setXUser(xUser);
+        return this;
     }
 
     public Set<VideoList> getVideoLists() {
@@ -116,6 +155,7 @@ public class Video implements Serializable {
         return "Video{" +
             "id=" + getId() +
             ", url='" + getUrl() + "'" +
+            ", name='" + getName() + "'" +
             "}";
     }
 }

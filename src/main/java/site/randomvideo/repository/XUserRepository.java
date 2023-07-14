@@ -2,7 +2,6 @@ package site.randomvideo.repository;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
-import site.randomvideo.domain.User;
 import site.randomvideo.domain.XUser;
 
 import java.util.Optional;

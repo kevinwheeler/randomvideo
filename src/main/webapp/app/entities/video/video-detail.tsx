@@ -37,6 +37,12 @@ export const VideoDetail = () => {
             </span>
           </dt>
           <dd>{videoEntity.url}</dd>
+          <dt>
+            <span id="name">
+              <Translate contentKey="randomvideoApp.video.name">Name</Translate>
+            </span>
+          </dt>
+          <dd>{videoEntity.name}</dd>
         </dl>
         <Button tag={Link} to="/video" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

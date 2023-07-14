@@ -5,11 +5,29 @@
   "fields": [
     {
       "fieldName": "url",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength", "pattern"],
+      "fieldValidateRulesMaxlength": "300",
+      "fieldValidateRulesMinlength": "11",
+      "fieldValidateRulesPattern": "^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)[^\\s]+$"
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "50",
+      "fieldValidateRulesMinlength": "1"
     }
   ],
   "name": "Video",
   "relationships": [
+    {
+      "otherEntityName": "xUser",
+      "otherEntityRelationshipName": "video",
+      "relationshipName": "xUser",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
     {
       "otherEntityName": "videoList",
       "otherEntityRelationshipName": "video",

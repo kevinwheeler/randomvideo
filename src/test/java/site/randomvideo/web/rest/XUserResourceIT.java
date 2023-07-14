@@ -29,9 +29,6 @@ import site.randomvideo.repository.XUserRepository;
 @WithMockUser
 class XUserResourceIT {
 
-    private static final String DEFAULT_VIDEO_LIST_URL_SLUG = "AAAAAAAAAA";
-    private static final String UPDATED_VIDEO_LIST_URL_SLUG = "BBBBBBBBBB";
-
     private static final String ENTITY_API_URL = "/api/x-users";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -56,7 +53,7 @@ class XUserResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static XUser createEntity(EntityManager em) {
-        XUser xUser = new XUser().videoListUrlSlug(DEFAULT_VIDEO_LIST_URL_SLUG);
+        XUser xUser = new XUser();
         return xUser;
     }
 
@@ -67,7 +64,7 @@ class XUserResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static XUser createUpdatedEntity(EntityManager em) {
-        XUser xUser = new XUser().videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
+        XUser xUser = new XUser();
         return xUser;
     }
 
@@ -89,7 +86,6 @@ class XUserResourceIT {
         List<XUser> xUserList = xUserRepository.findAll();
         assertThat(xUserList).hasSize(databaseSizeBeforeCreate + 1);
         XUser testXUser = xUserList.get(xUserList.size() - 1);
-        assertThat(testXUser.getVideoListUrlSlug()).isEqualTo(DEFAULT_VIDEO_LIST_URL_SLUG);
     }
 
     @Test
@@ -121,8 +117,7 @@ class XUserResourceIT {
             .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(xUser.getId().intValue())))
-            .andExpect(jsonPath("$.[*].videoListUrlSlug").value(hasItem(DEFAULT_VIDEO_LIST_URL_SLUG)));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(xUser.getId().intValue())));
     }
 
     @Test
@@ -136,8 +131,7 @@ class XUserResourceIT {
             .perform(get(ENTITY_API_URL_ID, xUser.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(xUser.getId().intValue()))
-            .andExpect(jsonPath("$.videoListUrlSlug").value(DEFAULT_VIDEO_LIST_URL_SLUG));
+            .andExpect(jsonPath("$.id").value(xUser.getId().intValue()));
     }
 
     @Test
@@ -159,7 +153,6 @@ class XUserResourceIT {
         XUser updatedXUser = xUserRepository.findById(xUser.getId()).get();
         // Disconnect from session so that the updates on updatedXUser are not directly saved in db
         em.detach(updatedXUser);
-        updatedXUser.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
 
         restXUserMockMvc
             .perform(
@@ -173,7 +166,6 @@ class XUserResourceIT {
         List<XUser> xUserList = xUserRepository.findAll();
         assertThat(xUserList).hasSize(databaseSizeBeforeUpdate);
         XUser testXUser = xUserList.get(xUserList.size() - 1);
-        assertThat(testXUser.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
     }
 
     @Test
@@ -244,8 +236,6 @@ class XUserResourceIT {
         XUser partialUpdatedXUser = new XUser();
         partialUpdatedXUser.setId(xUser.getId());
 
-        partialUpdatedXUser.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
-
         restXUserMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedXUser.getId())
@@ -258,7 +248,6 @@ class XUserResourceIT {
         List<XUser> xUserList = xUserRepository.findAll();
         assertThat(xUserList).hasSize(databaseSizeBeforeUpdate);
         XUser testXUser = xUserList.get(xUserList.size() - 1);
-        assertThat(testXUser.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
     }
 
     @Test
@@ -273,8 +262,6 @@ class XUserResourceIT {
         XUser partialUpdatedXUser = new XUser();
         partialUpdatedXUser.setId(xUser.getId());
 
-        partialUpdatedXUser.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
-
         restXUserMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedXUser.getId())
@@ -287,7 +274,6 @@ class XUserResourceIT {
         List<XUser> xUserList = xUserRepository.findAll();
         assertThat(xUserList).hasSize(databaseSizeBeforeUpdate);
         XUser testXUser = xUserList.get(xUserList.size() - 1);
-        assertThat(testXUser.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
     }
 
     @Test

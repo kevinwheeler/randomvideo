@@ -119,10 +119,6 @@ public class XUserResource {
         Optional<XUser> result = xUserRepository
             .findById(xUser.getId())
             .map(existingXUser -> {
-                if (xUser.getVideoListUrlSlug() != null) {
-                    existingXUser.setVideoListUrlSlug(xUser.getVideoListUrlSlug());
-                }
-
                 return existingXUser;
             })
             .map(xUserRepository::save);

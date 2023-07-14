@@ -38,8 +38,11 @@ import site.randomvideo.repository.VideoListRepository;
 @WithMockUser
 class VideoListResourceIT {
 
-    private static final String DEFAULT_VIDEO_LIST_URL_SLUG = "AAAAAAAAAA";
-    private static final String UPDATED_VIDEO_LIST_URL_SLUG = "BBBBBBBBBB";
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SLUG = "AAAAAAAAAA";
+    private static final String UPDATED_SLUG = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/video-lists";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -68,7 +71,7 @@ class VideoListResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static VideoList createEntity(EntityManager em) {
-        VideoList videoList = new VideoList().videoListUrlSlug(DEFAULT_VIDEO_LIST_URL_SLUG);
+        VideoList videoList = new VideoList().name(DEFAULT_NAME).slug(DEFAULT_SLUG);
         return videoList;
     }
 
@@ -79,7 +82,7 @@ class VideoListResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static VideoList createUpdatedEntity(EntityManager em) {
-        VideoList videoList = new VideoList().videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
+        VideoList videoList = new VideoList().name(UPDATED_NAME).slug(UPDATED_SLUG);
         return videoList;
     }
 
@@ -101,7 +104,8 @@ class VideoListResourceIT {
         List<VideoList> videoListList = videoListRepository.findAll();
         assertThat(videoListList).hasSize(databaseSizeBeforeCreate + 1);
         VideoList testVideoList = videoListList.get(videoListList.size() - 1);
-        assertThat(testVideoList.getVideoListUrlSlug()).isEqualTo(DEFAULT_VIDEO_LIST_URL_SLUG);
+        assertThat(testVideoList.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testVideoList.getSlug()).isEqualTo(DEFAULT_SLUG);
     }
 
     @Test
@@ -124,6 +128,40 @@ class VideoListResourceIT {
 
     @Test
     @Transactional
+    void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = videoListRepository.findAll().size();
+        // set the field null
+        videoList.setName(null);
+
+        // Create the VideoList, which fails.
+
+        restVideoListMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(videoList)))
+            .andExpect(status().isBadRequest());
+
+        List<VideoList> videoListList = videoListRepository.findAll();
+        assertThat(videoListList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkSlugIsRequired() throws Exception {
+        int databaseSizeBeforeTest = videoListRepository.findAll().size();
+        // set the field null
+        videoList.setSlug(null);
+
+        // Create the VideoList, which fails.
+
+        restVideoListMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(videoList)))
+            .andExpect(status().isBadRequest());
+
+        List<VideoList> videoListList = videoListRepository.findAll();
+        assertThat(videoListList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllVideoLists() throws Exception {
         // Initialize the database
         videoListRepository.saveAndFlush(videoList);
@@ -134,7 +172,8 @@ class VideoListResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(videoList.getId().intValue())))
-            .andExpect(jsonPath("$.[*].videoListUrlSlug").value(hasItem(DEFAULT_VIDEO_LIST_URL_SLUG)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].slug").value(hasItem(DEFAULT_SLUG)));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -166,7 +205,8 @@ class VideoListResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(videoList.getId().intValue()))
-            .andExpect(jsonPath("$.videoListUrlSlug").value(DEFAULT_VIDEO_LIST_URL_SLUG));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.slug").value(DEFAULT_SLUG));
     }
 
     @Test
@@ -188,7 +228,7 @@ class VideoListResourceIT {
         VideoList updatedVideoList = videoListRepository.findById(videoList.getId()).get();
         // Disconnect from session so that the updates on updatedVideoList are not directly saved in db
         em.detach(updatedVideoList);
-        updatedVideoList.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
+        updatedVideoList.name(UPDATED_NAME).slug(UPDATED_SLUG);
 
         restVideoListMockMvc
             .perform(
@@ -202,7 +242,8 @@ class VideoListResourceIT {
         List<VideoList> videoListList = videoListRepository.findAll();
         assertThat(videoListList).hasSize(databaseSizeBeforeUpdate);
         VideoList testVideoList = videoListList.get(videoListList.size() - 1);
-        assertThat(testVideoList.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
+        assertThat(testVideoList.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testVideoList.getSlug()).isEqualTo(UPDATED_SLUG);
     }
 
     @Test
@@ -273,7 +314,7 @@ class VideoListResourceIT {
         VideoList partialUpdatedVideoList = new VideoList();
         partialUpdatedVideoList.setId(videoList.getId());
 
-        partialUpdatedVideoList.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
+        partialUpdatedVideoList.name(UPDATED_NAME).slug(UPDATED_SLUG);
 
         restVideoListMockMvc
             .perform(
@@ -287,7 +328,8 @@ class VideoListResourceIT {
         List<VideoList> videoListList = videoListRepository.findAll();
         assertThat(videoListList).hasSize(databaseSizeBeforeUpdate);
         VideoList testVideoList = videoListList.get(videoListList.size() - 1);
-        assertThat(testVideoList.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
+        assertThat(testVideoList.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testVideoList.getSlug()).isEqualTo(UPDATED_SLUG);
     }
 
     @Test
@@ -302,7 +344,7 @@ class VideoListResourceIT {
         VideoList partialUpdatedVideoList = new VideoList();
         partialUpdatedVideoList.setId(videoList.getId());
 
-        partialUpdatedVideoList.videoListUrlSlug(UPDATED_VIDEO_LIST_URL_SLUG);
+        partialUpdatedVideoList.name(UPDATED_NAME).slug(UPDATED_SLUG);
 
         restVideoListMockMvc
             .perform(
@@ -316,7 +358,8 @@ class VideoListResourceIT {
         List<VideoList> videoListList = videoListRepository.findAll();
         assertThat(videoListList).hasSize(databaseSizeBeforeUpdate);
         VideoList testVideoList = videoListList.get(videoListList.size() - 1);
-        assertThat(testVideoList.getVideoListUrlSlug()).isEqualTo(UPDATED_VIDEO_LIST_URL_SLUG);
+        assertThat(testVideoList.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testVideoList.getSlug()).isEqualTo(UPDATED_SLUG);
     }
 
     @Test

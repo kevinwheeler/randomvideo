@@ -87,10 +87,6 @@ export const XUser = () => {
                 <th className="hand" onClick={sort('id')}>
                   <Translate contentKey="randomvideoApp.xUser.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('videoListUrlSlug')}>
-                  <Translate contentKey="randomvideoApp.xUser.videoListUrlSlug">Video List Url Slug</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('videoListUrlSlug')} />
-                </th>
                 <th>
                   <Translate contentKey="randomvideoApp.xUser.internalUser">Internal User</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
@@ -105,7 +101,6 @@ export const XUser = () => {
                       {xUser.id}
                     </Button>
                   </td>
-                  <td>{xUser.videoListUrlSlug}</td>
                   <td>{xUser.internalUser ? xUser.internalUser.id : ''}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">

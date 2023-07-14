@@ -87,9 +87,13 @@ export const VideoList = () => {
                 <th className="hand" onClick={sort('id')}>
                   <Translate contentKey="randomvideoApp.videoList.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('videoListUrlSlug')}>
-                  <Translate contentKey="randomvideoApp.videoList.videoListUrlSlug">Video List Url Slug</Translate>{' '}
-                  <FontAwesomeIcon icon={getSortIconByFieldName('videoListUrlSlug')} />
+                <th className="hand" onClick={sort('name')}>
+                  <Translate contentKey="randomvideoApp.videoList.name">Name</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
+                </th>
+                <th className="hand" onClick={sort('slug')}>
+                  <Translate contentKey="randomvideoApp.videoList.slug">Slug</Translate>{' '}
+                  <FontAwesomeIcon icon={getSortIconByFieldName('slug')} />
                 </th>
                 <th>
                   <Translate contentKey="randomvideoApp.videoList.video">Video</Translate> <FontAwesomeIcon icon="sort" />
@@ -108,7 +112,8 @@ export const VideoList = () => {
                       {videoList.id}
                     </Button>
                   </td>
-                  <td>{videoList.videoListUrlSlug}</td>
+                  <td>{videoList.name}</td>
+                  <td>{videoList.slug}</td>
                   <td>
                     {videoList.videos
                       ? videoList.videos.map((val, j) => (

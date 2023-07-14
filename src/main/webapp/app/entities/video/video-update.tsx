@@ -92,7 +92,36 @@ export const VideoUpdate = () => {
                   validate={{ required: true }}
                 />
               ) : null}
-              <ValidatedField label={translate('randomvideoApp.video.url')} id="video-url" name="url" data-cy="url" type="text" />
+              <ValidatedField
+                label={translate('randomvideoApp.video.url')}
+                id="video-url"
+                name="url"
+                data-cy="url"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  minLength: { value: 11, message: translate('entity.validation.minlength', { min: 11 }) },
+                  maxLength: { value: 300, message: translate('entity.validation.maxlength', { max: 300 }) },
+                  pattern: {
+                    value: /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[^\s]+$/,
+                    message: translate('entity.validation.pattern', {
+                      pattern: '^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)[^\\s]+$',
+                    }),
+                  },
+                }}
+              />
+              <ValidatedField
+                label={translate('randomvideoApp.video.name')}
+                id="video-name"
+                name="name"
+                data-cy="name"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  minLength: { value: 1, message: translate('entity.validation.minlength', { min: 1 }) },
+                  maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
+                }}
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/video" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

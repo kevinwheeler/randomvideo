@@ -32,11 +32,17 @@ export const VideoListDetail = () => {
           </dt>
           <dd>{videoListEntity.id}</dd>
           <dt>
-            <span id="videoListUrlSlug">
-              <Translate contentKey="randomvideoApp.videoList.videoListUrlSlug">Video List Url Slug</Translate>
+            <span id="name">
+              <Translate contentKey="randomvideoApp.videoList.name">Name</Translate>
             </span>
           </dt>
-          <dd>{videoListEntity.videoListUrlSlug}</dd>
+          <dd>{videoListEntity.name}</dd>
+          <dt>
+            <span id="slug">
+              <Translate contentKey="randomvideoApp.videoList.slug">Slug</Translate>
+            </span>
+          </dt>
+          <dd>{videoListEntity.slug}</dd>
           <dt>
             <Translate contentKey="randomvideoApp.videoList.video">Video</Translate>
           </dt>

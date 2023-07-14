@@ -1,5 +1,7 @@
 package site.randomvideo.web.rest;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -60,7 +62,7 @@ public class VideoListResource {
      * @throws UserNotLoggedInException if the user is not logged in.
      */
     @PostMapping("/video-lists")
-    public ResponseEntity<VideoList> createVideoList(@RequestBody VideoList videoList) throws URISyntaxException {
+    public ResponseEntity<VideoList> createVideoList(@Valid @RequestBody VideoList videoList) throws URISyntaxException {
         log.debug("REST request to save VideoList : {}", videoList);
         if (videoList.getId() != null) {
             throw new BadRequestAlertException("A new videoList cannot already have an ID", ENTITY_NAME, "idexists");
@@ -89,7 +91,7 @@ public class VideoListResource {
     @PutMapping("/video-lists/{id}")
     public ResponseEntity<VideoList> updateVideoList(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody VideoList videoList
+        @Valid @RequestBody VideoList videoList
     ) throws URISyntaxException {
         log.debug("REST request to update VideoList : {}, {}", id, videoList);
         if (videoList.getId() == null) {
@@ -134,7 +136,7 @@ public class VideoListResource {
 //    @PatchMapping(value = "/video-lists/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<VideoList> partialUpdateVideoList(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody VideoList videoList
+        @NotNull @RequestBody VideoList videoList
     ) throws URISyntaxException {
         log.debug("REST request to partial update VideoList partially : {}, {}", id, videoList);
         if (videoList.getId() == null) {
@@ -151,8 +153,11 @@ public class VideoListResource {
         Optional<VideoList> result = videoListRepository
             .findById(videoList.getId())
             .map(existingVideoList -> {
-                if (videoList.getVideoListUrlSlug() != null) {
-                    existingVideoList.setVideoListUrlSlug(videoList.getVideoListUrlSlug());
+                if (videoList.getName() != null) {
+                    existingVideoList.setName(videoList.getName());
+                }
+                if (videoList.getSlug() != null) {
+                    existingVideoList.setSlug(videoList.getSlug());
                 }
 
                 return existingVideoList;

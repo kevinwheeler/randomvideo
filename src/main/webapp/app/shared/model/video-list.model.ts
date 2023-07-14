@@ -3,7 +3,8 @@ import { IXUser } from 'app/shared/model/x-user.model';
 
 export interface IVideoList {
   id?: number;
-  videoListUrlSlug?: string | null;
+  name?: string;
+  slug?: string;
   videos?: IVideo[] | null;
   xUser?: IXUser | null;
 }

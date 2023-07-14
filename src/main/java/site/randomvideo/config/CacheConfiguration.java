@@ -54,6 +54,7 @@ public class CacheConfiguration {
             createCache(cm, site.randomvideo.domain.VideoList.class.getName() + ".videos");
             createCache(cm, site.randomvideo.domain.Video.class.getName());
             createCache(cm, site.randomvideo.domain.Video.class.getName() + ".videoLists");
+            createCache(cm, site.randomvideo.domain.XUser.class.getName() + ".videos");
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -19,6 +19,8 @@
       },
       "id": "ID",
       "url": "Url",
+      "name": "Name",
+      "xUser": "X User",
       "videoList": "Video List"
     }
   }

@@ -29,8 +29,11 @@ import site.randomvideo.repository.VideoRepository;
 @WithMockUser
 class VideoResourceIT {
 
-    private static final String DEFAULT_URL = "AAAAAAAAAA";
-    private static final String UPDATED_URL = "BBBBBBBBBB";
+    private static final String DEFAULT_URL = "youtu.be/H,4c";
+    private static final String UPDATED_URL = "youtube.com/watch?v=A|Y!@5";
+
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/videos";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -56,7 +59,7 @@ class VideoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Video createEntity(EntityManager em) {
-        Video video = new Video().url(DEFAULT_URL);
+        Video video = new Video().url(DEFAULT_URL).name(DEFAULT_NAME);
         return video;
     }
 
@@ -67,7 +70,7 @@ class VideoResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Video createUpdatedEntity(EntityManager em) {
-        Video video = new Video().url(UPDATED_URL);
+        Video video = new Video().url(UPDATED_URL).name(UPDATED_NAME);
         return video;
     }
 
@@ -90,6 +93,7 @@ class VideoResourceIT {
         assertThat(videoList).hasSize(databaseSizeBeforeCreate + 1);
         Video testVideo = videoList.get(videoList.size() - 1);
         assertThat(testVideo.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testVideo.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
@@ -112,6 +116,40 @@ class VideoResourceIT {
 
     @Test
     @Transactional
+    void checkUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = videoRepository.findAll().size();
+        // set the field null
+        video.setUrl(null);
+
+        // Create the Video, which fails.
+
+        restVideoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(video)))
+            .andExpect(status().isBadRequest());
+
+        List<Video> videoList = videoRepository.findAll();
+        assertThat(videoList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = videoRepository.findAll().size();
+        // set the field null
+        video.setName(null);
+
+        // Create the Video, which fails.
+
+        restVideoMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(video)))
+            .andExpect(status().isBadRequest());
+
+        List<Video> videoList = videoRepository.findAll();
+        assertThat(videoList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllVideos() throws Exception {
         // Initialize the database
         videoRepository.saveAndFlush(video);
@@ -122,7 +160,8 @@ class VideoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(video.getId().intValue())))
-            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)));
+            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
     }
 
     @Test
@@ -137,7 +176,8 @@ class VideoResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(video.getId().intValue()))
-            .andExpect(jsonPath("$.url").value(DEFAULT_URL));
+            .andExpect(jsonPath("$.url").value(DEFAULT_URL))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
     }
 
     @Test
@@ -159,7 +199,7 @@ class VideoResourceIT {
         Video updatedVideo = videoRepository.findById(video.getId()).get();
         // Disconnect from session so that the updates on updatedVideo are not directly saved in db
         em.detach(updatedVideo);
-        updatedVideo.url(UPDATED_URL);
+        updatedVideo.url(UPDATED_URL).name(UPDATED_NAME);
 
         restVideoMockMvc
             .perform(
@@ -174,6 +214,7 @@ class VideoResourceIT {
         assertThat(videoList).hasSize(databaseSizeBeforeUpdate);
         Video testVideo = videoList.get(videoList.size() - 1);
         assertThat(testVideo.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testVideo.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test
@@ -257,6 +298,7 @@ class VideoResourceIT {
         assertThat(videoList).hasSize(databaseSizeBeforeUpdate);
         Video testVideo = videoList.get(videoList.size() - 1);
         assertThat(testVideo.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testVideo.getName()).isEqualTo(DEFAULT_NAME);
     }
 
     @Test
@@ -271,7 +313,7 @@ class VideoResourceIT {
         Video partialUpdatedVideo = new Video();
         partialUpdatedVideo.setId(video.getId());
 
-        partialUpdatedVideo.url(UPDATED_URL);
+        partialUpdatedVideo.url(UPDATED_URL).name(UPDATED_NAME);
 
         restVideoMockMvc
             .perform(
@@ -286,6 +328,7 @@ class VideoResourceIT {
         assertThat(videoList).hasSize(databaseSizeBeforeUpdate);
         Video testVideo = videoList.get(videoList.size() - 1);
         assertThat(testVideo.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testVideo.getName()).isEqualTo(UPDATED_NAME);
     }
 
     @Test

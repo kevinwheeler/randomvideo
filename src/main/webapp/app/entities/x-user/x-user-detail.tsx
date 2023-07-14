@@ -32,12 +32,6 @@ export const XUserDetail = () => {
           </dt>
           <dd>{xUserEntity.id}</dd>
           <dt>
-            <span id="videoListUrlSlug">
-              <Translate contentKey="randomvideoApp.xUser.videoListUrlSlug">Video List Url Slug</Translate>
-            </span>
-          </dt>
-          <dd>{xUserEntity.videoListUrlSlug}</dd>
-          <dt>
             <Translate contentKey="randomvideoApp.xUser.internalUser">Internal User</Translate>
           </dt>
           <dd>{xUserEntity.internalUser ? xUserEntity.internalUser.id : ''}</dd>

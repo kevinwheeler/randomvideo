@@ -18,7 +18,8 @@
         "title": "Video List"
       },
       "id": "ID",
-      "videoListUrlSlug": "Video List Url Slug",
+      "name": "Name",
+      "slug": "Slug",
       "video": "Video",
       "xUser": "X User"
     }

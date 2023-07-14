@@ -4,8 +4,18 @@
   "entityTableName": "video_list",
   "fields": [
     {
-      "fieldName": "videoListUrlSlug",
-      "fieldType": "String"
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength"],
+      "fieldValidateRulesMaxlength": "50",
+      "fieldValidateRulesMinlength": "1"
+    },
+    {
+      "fieldName": "slug",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "minlength", "maxlength", "unique"],
+      "fieldValidateRulesMaxlength": "50",
+      "fieldValidateRulesMinlength": "1"
     }
   ],
   "name": "VideoList",

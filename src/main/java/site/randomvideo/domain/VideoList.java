@@ -2,6 +2,7 @@ package site.randomvideo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +25,15 @@ public class VideoList implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "video_list_url_slug")
-    private String videoListUrlSlug;
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "name", length = 50, nullable = false)
+    private String name;
+
+    @NotNull
+    @Size(min = 1, max = 50)
+    @Column(name = "slug", length = 50, nullable = false, unique = true)
+    private String slug;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -34,11 +42,11 @@ public class VideoList implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "video_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "videoLists" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "xUser", "videoLists" }, allowSetters = true)
     private Set<Video> videos = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "internalUser", "videoLists" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "internalUser", "videoLists", "videos" }, allowSetters = true)
     private XUser xUser;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -56,17 +64,30 @@ public class VideoList implements Serializable {
         this.id = id;
     }
 
-    public String getVideoListUrlSlug() {
-        return this.videoListUrlSlug;
+    public String getName() {
+        return this.name;
     }
 
-    public VideoList videoListUrlSlug(String videoListUrlSlug) {
-        this.setVideoListUrlSlug(videoListUrlSlug);
+    public VideoList name(String name) {
+        this.setName(name);
         return this;
     }
 
-    public void setVideoListUrlSlug(String videoListUrlSlug) {
-        this.videoListUrlSlug = videoListUrlSlug;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSlug() {
+        return this.slug;
+    }
+
+    public VideoList slug(String slug) {
+        this.setSlug(slug);
+        return this;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     public Set<Video> getVideos() {
@@ -131,7 +152,8 @@ public class VideoList implements Serializable {
     public String toString() {
         return "VideoList{" +
             "id=" + getId() +
-            ", videoListUrlSlug='" + getVideoListUrlSlug() + "'" +
+            ", name='" + getName() + "'" +
+            ", slug='" + getSlug() + "'" +
             "}";
     }
 }

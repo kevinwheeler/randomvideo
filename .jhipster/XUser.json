@@ -2,12 +2,7 @@
   "applications": "*",
   "changelogDate": "20230629034101",
   "entityTableName": "x_user",
-  "fields": [
-    {
-      "fieldName": "videoListUrlSlug",
-      "fieldType": "String"
-    }
-  ],
+  "fields": [],
   "name": "XUser",
   "relationships": [
     {
@@ -21,6 +16,13 @@
       "otherEntityName": "videoList",
       "otherEntityRelationshipName": "xUser",
       "relationshipName": "videoList",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "video",
+      "otherEntityRelationshipName": "xUser",
+      "relationshipName": "video",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
     }

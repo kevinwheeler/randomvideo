@@ -18,9 +18,9 @@
         "title": "X User"
       },
       "id": "ID",
-      "videoListUrlSlug": "Video List Url Slug",
       "internalUser": "Internal User",
-      "videoList": "Video List"
+      "videoList": "Video List",
+      "video": "Video"
     }
   }
 }

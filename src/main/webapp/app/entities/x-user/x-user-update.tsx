@@ -95,13 +95,6 @@ export const XUserUpdate = () => {
                 />
               ) : null}
               <ValidatedField
-                label={translate('randomvideoApp.xUser.videoListUrlSlug')}
-                id="x-user-videoListUrlSlug"
-                name="videoListUrlSlug"
-                data-cy="videoListUrlSlug"
-                type="text"
-              />
-              <ValidatedField
                 id="x-user-internalUser"
                 name="internalUser"
                 data-cy="internalUser"

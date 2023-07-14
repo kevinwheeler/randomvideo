@@ -24,9 +24,6 @@ public class XUser implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "video_list_url_slug")
-    private String videoListUrlSlug;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User internalUser;
@@ -35,6 +32,11 @@ public class XUser implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "videos", "xUser" }, allowSetters = true)
     private Set<VideoList> videoLists = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "xUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "xUser", "videoLists" }, allowSetters = true)
+    private Set<Video> videos = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -49,19 +51,6 @@ public class XUser implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getVideoListUrlSlug() {
-        return this.videoListUrlSlug;
-    }
-
-    public XUser videoListUrlSlug(String videoListUrlSlug) {
-        this.setVideoListUrlSlug(videoListUrlSlug);
-        return this;
-    }
-
-    public void setVideoListUrlSlug(String videoListUrlSlug) {
-        this.videoListUrlSlug = videoListUrlSlug;
     }
 
     public User getInternalUser() {
@@ -108,6 +97,37 @@ public class XUser implements Serializable {
         return this;
     }
 
+    public Set<Video> getVideos() {
+        return this.videos;
+    }
+
+    public void setVideos(Set<Video> videos) {
+        if (this.videos != null) {
+            this.videos.forEach(i -> i.setXUser(null));
+        }
+        if (videos != null) {
+            videos.forEach(i -> i.setXUser(this));
+        }
+        this.videos = videos;
+    }
+
+    public XUser videos(Set<Video> videos) {
+        this.setVideos(videos);
+        return this;
+    }
+
+    public XUser addVideo(Video video) {
+        this.videos.add(video);
+        video.setXUser(this);
+        return this;
+    }
+
+    public XUser removeVideo(Video video) {
+        this.videos.remove(video);
+        video.setXUser(null);
+        return this;
+    }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -132,7 +152,6 @@ public class XUser implements Serializable {
     public String toString() {
         return "XUser{" +
             "id=" + getId() +
-            ", videoListUrlSlug='" + getVideoListUrlSlug() + "'" +
             "}";
     }
 }

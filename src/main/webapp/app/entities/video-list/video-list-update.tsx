@@ -10,8 +10,6 @@ import { useAppDispatch, useAppSelector } from 'app/config/store';
 
 import { IVideo } from 'app/shared/model/video.model';
 import { getEntities as getVideos } from 'app/entities/video/video.reducer';
-import { IXUser } from 'app/shared/model/x-user.model';
-// import { getEntities as getXUsers } from 'app/entities/x-user/x-user.reducer';
 import { IVideoList } from 'app/shared/model/video-list.model';
 import { getEntity, updateEntity, createEntity, reset } from './video-list.reducer';
 
@@ -24,12 +22,10 @@ export const VideoListUpdate = () => {
   const isNew = id === undefined;
 
   const videos = useAppSelector(state => state.video.entities);
-  // const xUsers = useAppSelector(state => state.xUser.entities);
   const videoListEntity = useAppSelector(state => state.videoList.entity);
   const loading = useAppSelector(state => state.videoList.loading);
   const updating = useAppSelector(state => state.videoList.updating);
   const updateSuccess = useAppSelector(state => state.videoList.updateSuccess);
-  const account = useAppSelector(state => state.authentication.account);
 
   const handleClose = () => {
     navigate('/video-list');
@@ -43,7 +39,6 @@ export const VideoListUpdate = () => {
     }
 
     dispatch(getVideos({}));
-    // dispatch(getXUsers({}));
   }, []);
 
   useEffect(() => {
@@ -57,10 +52,6 @@ export const VideoListUpdate = () => {
       ...videoListEntity,
       ...values,
       videos: mapIdList(values.videos),
-      // xUser: xUsers.find(it => it.id.toString() === values.xUser.toString()),
-      // TODO should we just send the xUser id?
-      xUserId: account.id
-
     };
 
     if (isNew) {
@@ -105,11 +96,28 @@ export const VideoListUpdate = () => {
                 />
               ) : null}
               <ValidatedField
-                label={translate('randomvideoApp.videoList.videoListUrlSlug')}
-                id="video-list-videoListUrlSlug"
-                name="videoListUrlSlug"
-                data-cy="videoListUrlSlug"
+                label={translate('randomvideoApp.videoList.name')}
+                id="video-list-name"
+                name="name"
+                data-cy="name"
                 type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  minLength: { value: 1, message: translate('entity.validation.minlength', { min: 1 }) },
+                  maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
+                }}
+              />
+              <ValidatedField
+                label={translate('randomvideoApp.videoList.slug')}
+                id="video-list-slug"
+                name="slug"
+                data-cy="slug"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  minLength: { value: 1, message: translate('entity.validation.minlength', { min: 1 }) },
+                  maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
+                }}
               />
               <ValidatedField
                 label={translate('randomvideoApp.videoList.video')}
@@ -128,22 +136,6 @@ export const VideoListUpdate = () => {
                     ))
                   : null}
               </ValidatedField>
-              {/* <ValidatedField
-                id="video-list-xUser"
-                name="xUser"
-                data-cy="xUser"
-                label={translate('randomvideoApp.videoList.xUser')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {xUsers
-                  ? xUsers.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField> */}
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/video-list" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
