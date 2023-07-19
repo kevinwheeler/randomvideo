@@ -14,12 +14,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import site.randomvideo.domain.User;
 import site.randomvideo.domain.VideoList;
+import site.randomvideo.domain.XUser;
 import site.randomvideo.repository.XUserRepository;
-import site.randomvideo.repository.UserRepository;
 import site.randomvideo.repository.VideoListRepository;
 import site.randomvideo.service.UserService;
+import site.randomvideo.service.XUserService;
 import site.randomvideo.web.rest.errors.BadRequestAlertException;
 import site.randomvideo.web.rest.errors.UserNotLoggedInException;
 import tech.jhipster.web.util.HeaderUtil;
@@ -42,14 +42,16 @@ public class VideoListResource {
 
     private final VideoListRepository videoListRepository;
     private final UserService userService;
+    private final XUserService xUserService;
 
     private final XUserRepository xUserRepository;
 
 
 
-    public VideoListResource(VideoListRepository videoListRepository, UserRepository userRepository, UserService userService, XUserRepository xUserRepository) {
+    public VideoListResource(VideoListRepository videoListRepository, UserService userService, XUserService xUserService, XUserRepository xUserRepository) {
         this.videoListRepository = videoListRepository;
         this.userService = userService;
+        this.xUserService = xUserService;
         this.xUserRepository = xUserRepository;
     }
 
@@ -68,8 +70,7 @@ public class VideoListResource {
             throw new BadRequestAlertException("A new videoList cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
-        videoList.setXUser(xUserRepository.findOneByInternalUserId(currentUser.getId()).get());
+        videoList.setXUser(xUserService.getLoggedInXUser());
 
         VideoList result = videoListRepository.save(videoList);
         return ResponseEntity
@@ -105,14 +106,14 @@ public class VideoListResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
+        XUser currentXUser = xUserService.getLoggedInXUser();
         VideoList currentVideoList = videoListRepository.findById(id).get();
-        if (currentVideoList.getXUser().getInternalUser().getId() != currentUser.getId()) {
+        if (!currentVideoList.getXUser().equals(currentXUser)) {
 //            throw new BadRequestAlertException("You are not allowed to edit this video list", ENTITY_NAME, "notallowed");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        videoList.setXUser(xUserRepository.findOneByInternalUserId(currentUser.getId()).get());
+        videoList.setXUser(currentXUser);
         VideoList result = videoListRepository.save(videoList);
         return ResponseEntity
             .ok()
@@ -209,9 +210,9 @@ public class VideoListResource {
     public ResponseEntity<Void> deleteVideoList(@PathVariable Long id) {
         log.debug("REST request to delete VideoList : {}", id);
 
-        User currentUser = userService.getUserWithAuthorities().orElseThrow(() -> new UserNotLoggedInException());
+        XUser currentXUser = xUserService.getLoggedInXUser();
         VideoList videoListToDelete = videoListRepository.findById(id).get();
-        if (videoListToDelete.getXUser().getInternalUser().getId() != currentUser.getId()) {
+        if (!videoListToDelete.getXUser().equals(currentXUser)) {
 //            throw new BadRequestAlertException("You are not allowed to delete this video list", ENTITY_NAME, "notallowed");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }

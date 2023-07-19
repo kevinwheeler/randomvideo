@@ -10,12 +10,20 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import site.randomvideo.domain.User;
 import site.randomvideo.domain.Video;
+import site.randomvideo.domain.VideoList;
+import site.randomvideo.domain.XUser;
 import site.randomvideo.repository.VideoRepository;
+import site.randomvideo.repository.XUserRepository;
+import site.randomvideo.service.UserService;
+import site.randomvideo.service.XUserService;
 import site.randomvideo.web.rest.errors.BadRequestAlertException;
+import site.randomvideo.web.rest.errors.UserNotLoggedInException;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
@@ -34,10 +42,16 @@ public class VideoResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final UserService userService;
     private final VideoRepository videoRepository;
+    private final XUserRepository xUserRepository;
+    private final XUserService xUserService;
 
-    public VideoResource(VideoRepository videoRepository) {
+    public VideoResource(VideoRepository videoRepository, UserService userService, XUserRepository xUserRepository, XUserService xUserService) {
         this.videoRepository = videoRepository;
+        this.userService = userService;
+        this.xUserService = xUserService;
+        this.xUserRepository = xUserRepository;
     }
 
     /**
@@ -53,6 +67,8 @@ public class VideoResource {
         if (video.getId() != null) {
             throw new BadRequestAlertException("A new video cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        video.setXUser(xUserService.getLoggedInXUser());
+
         Video result = videoRepository.save(video);
         return ResponseEntity
             .created(new URI("/api/videos/" + result.getId()))
@@ -85,6 +101,12 @@ public class VideoResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
+        XUser currentXUser = xUserService.getLoggedInXUser();
+        Video currentVideo = videoRepository.findById(id).get();
+        if (!currentVideo.getXUser().equals(currentXUser)) {
+//            throw new BadRequestAlertException("You are not allowed to edit this video list", ENTITY_NAME, "notallowed");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         Video result = videoRepository.save(video);
         return ResponseEntity
             .ok()
@@ -103,7 +125,9 @@ public class VideoResource {
      * or with status {@code 500 (Internal Server Error)} if the video couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PatchMapping(value = "/videos/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    // We aren't using patch right now. Will need to add code to make sure that
+    // people can't patch other people's videos beforehand if we end using this.
+//    @PatchMapping(value = "/videos/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<Video> partialUpdateVideo(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody Video video
@@ -173,6 +197,12 @@ public class VideoResource {
     @DeleteMapping("/videos/{id}")
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
         log.debug("REST request to delete Video : {}", id);
+        XUser currentXUser = xUserService.getLoggedInXUser();
+        Video videoToDelete = videoRepository.findById(id).get();
+        if (!videoToDelete.getXUser().equals(currentXUser)) {
+//            throw new BadRequestAlertException("You are not allowed to delete this video list", ENTITY_NAME, "notallowed");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
         videoRepository.deleteById(id);
         return ResponseEntity
             .noContent()
