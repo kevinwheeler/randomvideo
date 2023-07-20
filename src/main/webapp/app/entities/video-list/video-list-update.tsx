@@ -38,7 +38,7 @@ export const VideoListUpdate = () => {
       dispatch(getEntity(id));
     }
 
-    dispatch(getVideos({}));
+    dispatch(getVideos({query: "user=current"}));
   }, []);
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export const VideoListUpdate = () => {
                 }}
               />
               <ValidatedField
-                label={translate('randomvideoApp.videoList.slug')}
+                label={translate('randomvideoApp.videoList.slug') + ". " + translate('randomvideoApp.videoList.slugAttributeDescription')}
                 id="video-list-slug"
                 name="slug"
                 data-cy="slug"
@@ -131,7 +131,7 @@ export const VideoListUpdate = () => {
                 {videos
                   ? videos.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.name}
                       </option>
                     ))
                   : null}

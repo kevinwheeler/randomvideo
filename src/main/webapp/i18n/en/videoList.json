@@ -19,7 +19,8 @@
       },
       "id": "ID",
       "name": "Name",
-      "slug": "Slug",
+      "slug": "URL Slug",
+      "slugAttributeDescription": "Your video will be available at www.randomvideo.com/video-lists/{slug}",
       "video": "Video",
       "xUser": "X User"
     }

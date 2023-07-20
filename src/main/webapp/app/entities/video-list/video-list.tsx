@@ -96,12 +96,8 @@ export const VideoList = () => {
                   <Translate contentKey="randomvideoApp.videoList.slug">Slug</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('slug')} />
                 </th>
-                <th>
-                  <Translate contentKey="randomvideoApp.videoList.video">Video</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  <Translate contentKey="randomvideoApp.videoList.xUser">X User</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
+                <th />
+                <th />
                 <th />
               </tr>
             </thead>
@@ -115,7 +111,7 @@ export const VideoList = () => {
                   </td>
                   <td>{videoList.name}</td>
                   <td>{videoList.slug}</td>
-                  <td>
+                  {/* <td>
                     {videoList.videos
                       ? videoList.videos.map((val, j) => (
                           <span key={j}>
@@ -124,8 +120,10 @@ export const VideoList = () => {
                           </span>
                         ))
                       : null}
-                  </td>
-                  <td>{videoList.xUser ? <Link to={`/x-user/${videoList.xUser.id}`}>{videoList.xUser.id}</Link> : ''}</td>
+                  </td> */}
+                  {/* <td>{videoList.xUser ? <Link to={`/x-user/${videoList.xUser.id}`}>{videoList.xUser.id}</Link> : ''}</td> */}
+                  <td />
+                  <td />
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/video-list/${videoList.id}`} color="info" size="sm" data-cy="entityDetailsButton">

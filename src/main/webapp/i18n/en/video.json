@@ -18,7 +18,8 @@
         "title": "Video"
       },
       "id": "ID",
-      "url": "Url",
+      "url": "Youtube Video URL",
+      "urlAttributeDescription": "Currently only Youtube videos are supported. Please copy and paste in a YouTube video URL.",
       "name": "Name",
       "xUser": "X User",
       "videoList": "Video List"

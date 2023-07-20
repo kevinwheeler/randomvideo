@@ -88,12 +88,12 @@ export const Video = () => {
                 <th className="hand" onClick={sort('id')}>
                   <Translate contentKey="randomvideoApp.video.id">ID</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('id')} />
                 </th>
-                <th className="hand" onClick={sort('url')}>
-                  <Translate contentKey="randomvideoApp.video.url">Url</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('url')} />
-                </th>
                 <th className="hand" onClick={sort('name')}>
                   <Translate contentKey="randomvideoApp.video.name">Name</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('name')} />
+                </th>
+                <th className="hand" onClick={sort('url')}>
+                  <Translate contentKey="randomvideoApp.video.url">Url</Translate> <FontAwesomeIcon icon={getSortIconByFieldName('url')} />
                 </th>
                 <th />
               </tr>
@@ -106,8 +106,8 @@ export const Video = () => {
                       {video.id}
                     </Button>
                   </td>
-                  <td>{video.url}</td>
                   <td>{video.name}</td>
+                  <td>{video.url}</td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`/video/${video.id}`} color="info" size="sm" data-cy="entityDetailsButton">
