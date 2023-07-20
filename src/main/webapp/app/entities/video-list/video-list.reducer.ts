@@ -18,8 +18,8 @@ const apiUrl = 'api/video-lists';
 
 // Actions
 
-export const getEntities = createAsyncThunk('videoList/fetch_entity_list', async ({ sort }: IQueryParams) => {
-  const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}`;
+export const getEntities = createAsyncThunk('videoList/fetch_entity_list', async ({ sort, query }: IQueryParams) => {
+  const requestUrl = `${apiUrl}?${sort ? `sort=${sort}&` : ''}cacheBuster=${new Date().getTime()}&${query}`;
   return axios.get<IVideoList[]>(requestUrl);
 });
 

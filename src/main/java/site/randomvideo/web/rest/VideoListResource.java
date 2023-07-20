@@ -173,17 +173,32 @@ public class VideoListResource {
 
     /**
      * {@code GET  /video-lists} : get all the videoLists.
-     *
+     * @param user if user=current is passed in, only the current user's videos will be returned.
+     *      Otherwise, all videos will be returned.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of videoLists in body.
      */
     @GetMapping("/video-lists")
-    public List<VideoList> getAllVideoLists(@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
-        log.debug("REST request to get all VideoLists");
-        if (eagerload) {
-            return videoListRepository.findAllWithEagerRelationships();
+    public List<VideoList> getAllVideoLists(@RequestParam(required = false, defaultValue = "false") boolean eagerload, @RequestParam(value = "user", required = false) String user) {
+        if (user != null){
+            if (user.equals("current")){
+                XUser currentXUser = xUserService.getLoggedInXUser();
+                log.debug("REST request to get all VideoLists for current user");
+                if (eagerload) {
+                    return videoListRepository.findAllWithEagerRelationshipsByxUserId(currentXUser.getId());
+                } else {
+                    return videoListRepository.findAllByxUserId(currentXUser.getId());
+                }
+            } else {
+                throw new BadRequestAlertException("Invalid user", ENTITY_NAME, "userinvalid");
+            }
         } else {
-            return videoListRepository.findAll();
+            log.debug("REST request to get all VideoLists");
+            if (eagerload) {
+                return videoListRepository.findAllWithEagerRelationships();
+            } else {
+                return videoListRepository.findAll();
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import site.randomvideo.domain.VideoList;
+import site.randomvideo.domain.XUser;
 
 /**
  * Spring Data JPA repository for the VideoList entity.
@@ -28,4 +29,9 @@ public interface VideoListRepository extends VideoListRepositoryWithBagRelations
     default Page<VideoList> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    List<VideoList> findAllWithEagerRelationshipsByxUserId(Long id);
+    List<VideoList> findAllByxUserId(Long id);
+
+
 }

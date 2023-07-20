@@ -25,6 +25,7 @@ export const VideoList = () => {
     dispatch(
       getEntities({
         sort: `${sortState.sort},${sortState.order}`,
+        query: "user=current"
       })
     );
   };

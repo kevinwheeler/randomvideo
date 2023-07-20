@@ -165,15 +165,40 @@ public class VideoResource {
     }
 
     /**
-     * {@code GET  /videos} : get all the videos.
-     *
+     * {@code GET  /videos} : get videos.
+     * @param user if user=current is passed in, only the current user's videos will be returned.
+     *      Otherwise, all videos will be returned.
+     * @throws BadRequestAlertException if the user is not null or "current"
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of videos in body.
      */
     @GetMapping("/videos")
-    public List<Video> getAllVideos() {
-        log.debug("REST request to get all Videos");
-        return videoRepository.findAll();
+    public List<Video> getAllVideos(@RequestParam(value = "user", required = false) String user) {
+        if (user != null) {
+            if (user.equals("current")) {
+                log.debug("REST request to get current user's Videos");
+                XUser xUser = xUserService.getLoggedInXUser();
+                return videoRepository.findByxUserId(xUser.getId());
+            } else {
+                throw new BadRequestAlertException("Invalid user", ENTITY_NAME, "userinvalid");
+            }
+        } else {
+            log.debug("REST request to get all Videos");
+            return videoRepository.findAll();
+        }
     }
+
+//    /**
+//     * {@code GET  /users/current/videos} : get all the current user's videos.
+//     *
+//     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of videos in body.
+//     */
+//    @GetMapping("/users/current/videos")
+//    public List<Video> getUsersVideos(@PathVariable Long xUserId) {
+//        log.debug("REST request to get current user's Videos");
+//        XUser xUser = xUserService.getLoggedInXUser();
+//        return videoRepository.findByxUserId(xUserId);
+//    }
+
 
     /**
      * {@code GET  /videos/:id} : get the "id" video.
