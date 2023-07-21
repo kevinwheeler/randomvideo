@@ -32,6 +32,7 @@ public class VideoList implements Serializable {
 
     @NotNull
     @Size(min = 1, max = 50)
+    @Pattern(regexp = "^(?!(api|internal-use)$)[a-zA-Z0-9-]+$")
     @Column(name = "slug", length = 50, nullable = false, unique = true)
     private String slug;
 

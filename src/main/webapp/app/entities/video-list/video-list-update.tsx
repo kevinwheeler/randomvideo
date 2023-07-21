@@ -117,6 +117,10 @@ export const VideoListUpdate = () => {
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 1, message: translate('entity.validation.minlength', { min: 1 }) },
                   maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
+                  pattern: {
+                    value: /^(?!(api|internal-use)$)[a-zA-Z0-9-]+$/,
+                    message: translate('entity.validation.pattern', { pattern: '^(?!(api|internal-use)$)[a-zA-Z0-9-]+$' }),
+                  },
                 }}
               />
               <ValidatedField

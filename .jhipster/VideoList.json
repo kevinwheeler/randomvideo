@@ -13,9 +13,10 @@
     {
       "fieldName": "slug",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength", "maxlength", "unique"],
+      "fieldValidateRules": ["required", "minlength", "maxlength", "unique", "pattern"],
       "fieldValidateRulesMaxlength": "50",
-      "fieldValidateRulesMinlength": "1"
+      "fieldValidateRulesMinlength": "1",
+      "fieldValidateRulesPattern": "^(?!(api|internal-use)$)[a-zA-Z0-9-]+$"
     }
   ],
   "name": "VideoList",

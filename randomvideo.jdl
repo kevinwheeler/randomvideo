@@ -5,7 +5,7 @@ entity Video {
 
 entity VideoList {
     name String required minlength(1) maxlength(50)
-    slug String required minlength(1) maxlength(50) unique
+    slug String required minlength(1) maxlength(50) unique pattern(/^(?!(api|internal-use)$)[a-zA-Z0-9-]+$/)
 }
 
 /*
