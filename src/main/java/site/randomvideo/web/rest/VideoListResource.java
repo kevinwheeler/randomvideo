@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import site.randomvideo.domain.Video;
 import site.randomvideo.domain.VideoList;
 import site.randomvideo.domain.XUser;
 import site.randomvideo.repository.XUserRepository;
@@ -231,6 +232,11 @@ public class VideoListResource {
 //            throw new BadRequestAlertException("You are not allowed to delete this video list", ENTITY_NAME, "notallowed");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        // remove all relationships between this video list and its videos
+        for (Video video : videoListToDelete.getVideos()) {
+            video.getVideoLists().remove(videoListToDelete);
+        }
+        videoListToDelete.getVideos().clear();
 
         videoListRepository.deleteById(id);
         return ResponseEntity

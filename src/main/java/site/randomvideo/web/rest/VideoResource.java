@@ -228,6 +228,12 @@ public class VideoResource {
 //            throw new BadRequestAlertException("You are not allowed to delete this video list", ENTITY_NAME, "notallowed");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        // Remove the video from all video lists
+        for (VideoList videoList : videoToDelete.getVideoLists()) {
+            videoList.getVideos().remove(videoToDelete);
+        }
+        videoToDelete.getVideoLists().clear();
+
         videoRepository.deleteById(id);
         return ResponseEntity
             .noContent()

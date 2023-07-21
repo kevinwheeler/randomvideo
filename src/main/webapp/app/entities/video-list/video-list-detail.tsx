@@ -56,10 +56,6 @@ export const VideoListDetail = () => {
                 ))
               : null}
           </dd>
-          <dt>
-            <Translate contentKey="randomvideoApp.videoList.xUser">X User</Translate>
-          </dt>
-          <dd>{videoListEntity.xUser ? videoListEntity.xUser.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/video-list" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
