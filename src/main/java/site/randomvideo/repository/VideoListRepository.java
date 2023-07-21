@@ -32,4 +32,5 @@ public interface VideoListRepository extends VideoListRepositoryWithBagRelations
     List<VideoList> findAllByxUserId(Long id);
 
 
+    Optional<VideoList> findOneWithEagerRelationshipsBySlug(String slug);
 }

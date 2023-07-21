@@ -9,11 +9,12 @@ import PasswordResetInit from 'app/modules/account/password-reset/init/password-
 import PasswordResetFinish from 'app/modules/account/password-reset/finish/password-reset-finish';
 import Logout from 'app/modules/login/logout';
 import Home from 'app/modules/home/home';
-import EntitiesRoutes from 'app/entities/routes';
 import PrivateRoute from 'app/shared/auth/private-route';
 import ErrorBoundaryRoutes from 'app/shared/error/error-boundary-routes';
 import PageNotFound from 'app/shared/error/page-not-found';
 import { AUTHORITIES } from 'app/config/constants';
+import VideoList from './entities/video-list';
+import Video from './entities/video';
 
 const loading = <div>loading ...</div>;
 
@@ -24,6 +25,12 @@ const Account = Loadable({
 
 const Admin = Loadable({
   loader: () => import(/* webpackChunkName: "administration" */ 'app/modules/administration'),
+  loading: () => loading,
+});
+
+// get RandomVideo element
+const RandomVideo = Loadable({
+  loader: () => import(/* webpackChunkName: "randomVideo" */ 'app/modules/randomVideo'),
   loading: () => loading,
 });
 
@@ -58,15 +65,25 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path="*"
+       <Route
+          path="video/*"
           element={
             <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
-              <EntitiesRoutes />
+              <Video />
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<PageNotFound />} />
+        <Route 
+          path="video-list/*"
+          element={
+            <PrivateRoute hasAnyAuthorities={[AUTHORITIES.USER]}>
+              <VideoList />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route path=":slug" element={<RandomVideo />} />
+        <Route path=":param/*" element={<PageNotFound />} />
       </ErrorBoundaryRoutes>
     </div>
   );

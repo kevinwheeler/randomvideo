@@ -7,12 +7,16 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import site.randomvideo.domain.Video;
 import site.randomvideo.domain.VideoList;
@@ -201,6 +205,32 @@ public class VideoListResource {
                 return videoListRepository.findAll();
             }
         }
+    }
+
+    /**
+     * {@code GET  /video-lists/:slug/random-video} : get the "id" videoList.
+     *
+     * @param slug the slug of the videoList to get a video from.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the videoList, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/video-lists/{slug}/randomvideo")
+    public ResponseEntity<Video> getRandomVideo(@PathVariable @Pattern(regexp = "^(?!(api|internal-use)$)[a-zA-Z0-9-]+$", message = "Invalid slug") String slug) throws MethodArgumentNotValidException {
+        log.debug("REST request to get random video from {} slug : {}", slug);
+
+        Optional<VideoList> videoList = videoListRepository.findOneWithEagerRelationshipsBySlug(slug);
+        if (!videoList.isPresent()) {
+            throw new BadRequestAlertException("Invalid slug", ENTITY_NAME, "sluginvalid");
+        }
+
+
+        //get the list of videos from the videoList
+        Set<Video> videos = videoList.get().getVideos();
+//        if (videos.isEmpty()) {
+//            throw new BadRequestAlertException("Video list is empty", ENTITY_NAME, "videolistempty");
+//        }
+        Optional<Video> randomVideo = videos.stream().skip(new Random().nextInt(videos.size())).findFirst();
+        // return result
+        return ResponseUtil.wrapOrNotFound(randomVideo);
     }
 
     /**
