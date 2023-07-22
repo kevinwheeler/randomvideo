@@ -225,9 +225,9 @@ public class VideoListResource {
 
         //get the list of videos from the videoList
         Set<Video> videos = videoList.get().getVideos();
-//        if (videos.isEmpty()) {
-//            throw new BadRequestAlertException("Video list is empty", ENTITY_NAME, "videolistempty");
-//        }
+        if (videos.isEmpty()) {
+            throw new BadRequestAlertException("Video list is empty", ENTITY_NAME, "videolistempty");
+        }
         Optional<Video> randomVideo = videos.stream().skip(new Random().nextInt(videos.size())).findFirst();
         // return result
         return ResponseUtil.wrapOrNotFound(randomVideo);

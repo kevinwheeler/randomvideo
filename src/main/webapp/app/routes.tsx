@@ -30,7 +30,7 @@ const Admin = Loadable({
 
 // get RandomVideo element
 const RandomVideo = Loadable({
-  loader: () => import(/* webpackChunkName: "randomVideo" */ 'app/modules/randomVideo'),
+  loader: () => import(/* webpackChunkName: "randomVideo/randomVideo" */ 'app/modules/randomVideo/randomVideo'),
   loading: () => loading,
 });
 

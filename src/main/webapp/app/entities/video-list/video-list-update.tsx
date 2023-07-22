@@ -124,7 +124,7 @@ export const VideoListUpdate = () => {
                 }}
               />
               <ValidatedField
-                label={translate('randomvideoApp.videoList.video')}
+                label={translate('randomvideoApp.videoList.video') + ". " + translate('randomvideoApp.videoList.videoAttributeDescription')}
                 id="video-list-video"
                 data-cy="video"
                 type="select"

@@ -21,6 +21,7 @@
       "name": "Name",
       "slug": "URL Slug",
       "slugAttributeDescription": "Your video will be available at www.randomvideo.com/video-lists/{slug}",
+      "videoAttributeDescription": "You will need to add videos before you can add them to your video list.",
       "video": "Video",
       "xUser": "X User"
     }
