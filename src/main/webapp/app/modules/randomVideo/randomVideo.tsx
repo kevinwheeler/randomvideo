@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Col, Row } from 'reactstrap';
+import { Button, Col, Row } from 'reactstrap';
 import { Translate, translate} from 'react-jhipster';
 import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { getRandomVideo, reset } from './random-video-reducer';
+import { nextVideo, previousVideo, reset } from './random-video-reducer';
 import { useParams, useLocation } from 'react-router-dom';
 import './random-video.scss';
 
@@ -11,7 +11,8 @@ import { sanitizeUrl } from "@braintree/sanitize-url";
 
 export const RandomVideoPage = () => {
   const dispatch = useAppDispatch();
-  const randomVideo = useAppSelector(state => state.randomVideo.entity);
+  const randomVideo = useAppSelector(state => state.randomVideo.currentVideo);
+  const hasPreviousVideo = useAppSelector(state => state.randomVideo.hasPreviousVideo);
   let { slug } = useParams();
   let location = useLocation();
 
@@ -22,7 +23,8 @@ export const RandomVideoPage = () => {
 
 
   useEffect(() => {
-    dispatch(getRandomVideo(slug));
+    dispatch(reset())
+    dispatch(nextVideo(slug));
   }, [dispatch, slug]);
 
 
@@ -90,6 +92,14 @@ export const RandomVideoPage = () => {
     });
   }
 
+  function dispatchPreviousVideo(): void {
+    dispatch(previousVideo());
+  }
+
+  function dispatchNextVideo(): void {
+    dispatch(nextVideo(slug));
+  }
+
   return (
     <div>
       <Row className="justify-content-center">
@@ -105,6 +115,10 @@ export const RandomVideoPage = () => {
               title="Embedded youtube"
             />
           </div>
+          <div className="video-controls">
+              <Button onClick={dispatchPreviousVideo} disabled={!hasPreviousVideo}>Previous Video</Button>
+              <Button onClick={dispatchNextVideo}>Next Video</Button>
+          </div>
 
           {/* A call to action letting people know they can create their own video lists */}
           <div className="text-center">
@@ -118,7 +132,6 @@ export const RandomVideoPage = () => {
               </a>
             </p>
           </div>
-
         </Col>
       </Row>
     </div>

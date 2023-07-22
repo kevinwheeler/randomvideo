@@ -1,55 +1,83 @@
 import axios from 'axios';
-import { createAsyncThunk, } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, } from '@reduxjs/toolkit';
 import { createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IVideo, defaultValue } from 'app/shared/model/video.model';
+import { IRootState } from 'app/config/store';
 
-const initialState: EntityState<IVideo> = {
-  loading: false,
+const initialState: RandomVideoState = {
+  currentVideoIndex: -1,
+  currentVideo: defaultValue,
   errorMessage: null,
-  entities: [],
-  entity: defaultValue,
-  updating: false,
-  updateSuccess: false
+  hasPreviousVideo: false,
+  loading: false,
+  videos: [],
 };
 
-// Actions
-export const getRandomVideo = createAsyncThunk(
-  'randomVideo/fetch_random_video',
-  async (slug: string) => {
-    console.log("in fetch random video");
-    const requestUrl = `api/video-lists/${slug}/randomvideo`;
-    // return axios.get<IVideo>(requestUrl);
-    let reponse = axios.get<IVideo>(requestUrl);
-    console.log("response: ", reponse);
-    return reponse;
+interface RandomVideoState {
+  currentVideoIndex: number;
+  currentVideo: IVideo | null;
+  errorMessage: string | null;
+  hasPreviousVideo: boolean;
+  loading: boolean;
+  videos: IVideo[];
+}
+
+export const nextVideo = createAsyncThunk(
+  'randomVideo/next_random_video',
+  async (slug: string, { getState }) => {
+    const state = (getState() as IRootState).randomVideo;
+    let newVideo = null;
+    const isNextVideoAvailable = state.currentVideoIndex < state.videos.length - 1
+    if (!isNextVideoAvailable) {
+      const requestUrl = `api/video-lists/${slug}/randomvideo`;
+      const response = await axios.get<IVideo>(requestUrl);
+      newVideo = response.data;
+    }
+    return { video: newVideo };
   },
   { serializeError: serializeAxiosError }
 );
 
-export const RandomVideoSlice = createEntitySlice({
+export const RandomVideoSlice = createSlice({
   name: 'randomVideo',
   initialState,
+  reducers: {
+    reset() {
+      return initialState;
+    },
+    previousVideo(state) {
+      if (state.currentVideoIndex > 0) {
+        state.currentVideoIndex -= 1;
+        state.currentVideo = state.videos[state.currentVideoIndex];
+        state.hasPreviousVideo = state.currentVideoIndex > 0;
+      } else {
+        state.hasPreviousVideo = false;
+      }
+    }
+  },
   extraReducers(builder) {
     builder
-      .addCase(getRandomVideo.fulfilled, (state, action) => {
+      .addCase(nextVideo.fulfilled, (state, action) => {
         state.loading = false;
-        state.entity = action.payload.data;
-        console.log('action.payload.data: ', action.payload.data)
+        if(action.payload.video) {
+          state.videos.push(action.payload.video);
+        }
+        state.currentVideoIndex = state.currentVideoIndex + 1;
+        state.currentVideo = state.videos[state.currentVideoIndex];
+        state.hasPreviousVideo = state.currentVideoIndex > 0;
       })
-      .addCase(getRandomVideo.pending, state => {
+      .addCase(nextVideo.pending, state => {
         state.errorMessage = null;
         state.loading = true;
-        console.log("in pending");
       })
-      .addCase(getRandomVideo.rejected, (state, action) => {
+      .addCase(nextVideo.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message;
-        console.log("in rejected");
       });
   },
 });
 
-export const { reset } = RandomVideoSlice.actions;
+export const { reset, previousVideo} = RandomVideoSlice.actions;
 
 // Reducer
 export default RandomVideoSlice.reducer;
