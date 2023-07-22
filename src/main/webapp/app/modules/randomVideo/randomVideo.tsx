@@ -4,7 +4,7 @@ import { Translate, translate} from 'react-jhipster';
 import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getRandomVideo, reset } from './random-video-reducer';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import './random-video.scss';
 
 import { sanitizeUrl } from "@braintree/sanitize-url";
@@ -13,6 +13,13 @@ export const RandomVideoPage = () => {
   const dispatch = useAppDispatch();
   const randomVideo = useAppSelector(state => state.randomVideo.entity);
   let { slug } = useParams();
+  let location = useLocation();
+
+  // if we're on the homepage, use a hardcoded slug
+  if (location.pathname === "/") {
+    slug = "homepage";
+  }
+
 
   useEffect(() => {
     dispatch(getRandomVideo(slug));
