@@ -75,7 +75,14 @@ public class VideoListResource {
             throw new BadRequestAlertException("A new videoList cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        videoList.setXUser(xUserService.getLoggedInXUser());
+        XUser user = xUserService.getLoggedInXUser();
+        videoList.setXUser(user);
+
+        // Check the number of video lists for the user.
+        long count = videoListRepository.countByxUser(user);
+        if (count >= 1000) {
+            throw new BadRequestAlertException("You cannot have more than 5000 video lists", ENTITY_NAME, "limitexceeded");
+        }
 
         VideoList result = videoListRepository.save(videoList);
         return ResponseEntity

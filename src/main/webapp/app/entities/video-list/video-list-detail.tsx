@@ -44,6 +44,12 @@ export const VideoListDetail = () => {
           </dt>
           <dd>{videoListEntity.slug}</dd>
           <dt>
+            <span id="full-url">
+              <Translate contentKey="randomvideoApp.videoList.fullUrl">Full URL</Translate>
+            </span>
+          </dt>
+          <dd><a href={window.location.origin + "/" + videoListEntity.slug}>{window.location.origin + "/" + videoListEntity.slug}</a></dd>
+          <dt>
             <Translate contentKey="randomvideoApp.videoList.video">Video</Translate>
           </dt>
           <dd>
@@ -56,6 +62,10 @@ export const VideoListDetail = () => {
                 ))
               : null}
           </dd>
+          <dt>
+            <Translate contentKey="randomvideoApp.videoList.xUser">X User</Translate>
+          </dt>
+          <dd>{videoListEntity.xUser ? videoListEntity.xUser.id : ''}</dd>
         </dl>
         <Button tag={Link} to="/video-list" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

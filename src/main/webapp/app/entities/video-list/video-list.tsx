@@ -96,6 +96,10 @@ export const VideoList = () => {
                   <Translate contentKey="randomvideoApp.videoList.slug">Slug</Translate>{' '}
                   <FontAwesomeIcon icon={getSortIconByFieldName('slug')} />
                 </th>
+                <th>
+                  <Translate contentKey="randomvideoApp.videoList.fullUrl">Full URL</Translate>{' '}
+                  {/* <FontAwesomeIcon icon={getSortIconByFieldName('slug')} /> */}
+                </th>
                 <th />
                 <th />
                 <th />
@@ -111,6 +115,7 @@ export const VideoList = () => {
                   </td>
                   <td>{videoList.name}</td>
                   <td>{videoList.slug}</td>
+                  <td><a href={window.location.origin + "/" + videoList.slug}>{window.location.origin + "/" + videoList.slug}</a></td>
                   {/* <td>
                     {videoList.videos
                       ? videoList.videos.map((val, j) => (

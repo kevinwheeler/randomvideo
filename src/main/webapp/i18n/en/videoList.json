@@ -19,8 +19,9 @@
       },
       "id": "ID",
       "name": "Name",
+      "fullUrl": "Full URL",
       "slug": "URL Slug",
-      "slugAttributeDescription": "Your video will be available at www.randomvideo.com/video-lists/{slug}",
+      "slugAttributeDescription": "A random video from your video list will be publicly available at www.randomvideo.com/{your-url-slug}",
       "videoAttributeDescription": "You will need to add videos before you can add them to your video list.",
       "video": "Video",
       "xUser": "X User"

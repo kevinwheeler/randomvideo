@@ -67,7 +67,13 @@ public class VideoResource {
         if (video.getId() != null) {
             throw new BadRequestAlertException("A new video cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        video.setXUser(xUserService.getLoggedInXUser());
+        XUser currentXUser = xUserService.getLoggedInXUser();
+        video.setXUser(currentXUser);
+        long count = videoRepository.countByxUser(currentXUser);
+        if (count >= 5000) {
+            throw new BadRequestAlertException("You cannot have more than 5000 videos", ENTITY_NAME, "limitexceeded");
+        }
+
 
         Video result = videoRepository.save(video);
         return ResponseEntity
