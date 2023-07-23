@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, FormText } from 'reactstrap';
+import { Button, Row, Col } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Select from 'react-select'; // Import the react-select component
 
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
@@ -14,6 +15,11 @@ import { IVideoList } from 'app/shared/model/video-list.model';
 import { getEntity, updateEntity, createEntity, reset } from './video-list.reducer';
 
 export const VideoListUpdate = () => {
+  type OptionType = {
+    label: string;
+    value: string;
+  };
+
   const dispatch = useAppDispatch();
 
   const navigate = useNavigate();
@@ -26,6 +32,15 @@ export const VideoListUpdate = () => {
   const loading = useAppSelector(state => state.videoList.loading);
   const updating = useAppSelector(state => state.videoList.updating);
   const updateSuccess = useAppSelector(state => state.videoList.updateSuccess);
+  const [selectedVideoOptions, setSelectedVideoOptions] = useState<OptionType[]>(null);
+
+  useEffect(() => {
+    if (videoListEntity && videoListEntity.videos && !selectedVideoOptions) {
+      let selectedOptions:OptionType[] = videoListEntity.videos.map(video => ({ label: video.name, value: video.id }));
+      setSelectedVideoOptions(selectedOptions);
+    }
+  }, [videoListEntity]);
+  
 
   const handleClose = () => {
     navigate('/video-list');
@@ -51,7 +66,7 @@ export const VideoListUpdate = () => {
     const entity = {
       ...videoListEntity,
       ...values,
-      videos: mapIdList(values.videos),
+      videos: selectedVideoOptions.map(option => ({ id: option.value })),
     };
 
     if (isNew) {
@@ -66,8 +81,6 @@ export const VideoListUpdate = () => {
       ? {}
       : {
           ...videoListEntity,
-          videos: videoListEntity?.videos?.map(e => e.id.toString()),
-          xUser: videoListEntity?.xUser?.id,
         };
 
   return (
@@ -123,23 +136,29 @@ export const VideoListUpdate = () => {
                   },
                 }}
               />
-              <ValidatedField
-                label={translate('randomvideoApp.videoList.video') + ". " + translate('randomvideoApp.videoList.videoAttributeDescription')}
-                id="video-list-video"
-                data-cy="video"
-                type="select"
-                multiple
+              <label>
+                {translate('randomvideoApp.videoList.video') + ". " + translate('randomvideoApp.videoList.videoAttributeDescription')}
+              </label>
+
+              <Select
+                isMulti
                 name="videos"
-              >
-                <option value="" key="0" />
-                {videos
-                  ? videos.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.name}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
+                value={selectedVideoOptions}
+                onChange={(selectedOptions: OptionType[], actionMeta) => {
+                   setSelectedVideoOptions(selectedOptions);
+                  }
+                }
+                options={videos.map(video => ({ value: video.id, label: video.name }))}
+                className="basic-multi-select"
+                classNamePrefix="select"
+                styles={{
+                  option: (provided, state) => ({
+                    ...provided,
+                    color: state.isDisabled ? '#ccc' : '#333',
+                    backgroundColor: state.isSelected ? '#0052cc' : state.isFocused ? '#0052cc33' : null,
+                  }),
+                }}
+              />
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/video-list" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
