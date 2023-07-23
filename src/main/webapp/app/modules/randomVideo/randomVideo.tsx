@@ -3,7 +3,7 @@ import { Button, Col, Row } from 'reactstrap';
 import { Translate, translate} from 'react-jhipster';
 import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
-import { nextVideo, previousVideo, reset } from './random-video-reducer';
+import { fetchVideos, nextVideo, previousVideo } from './random-video-reducer';
 import { useParams, useLocation } from 'react-router-dom';
 import './random-video.scss';
 
@@ -13,6 +13,7 @@ export const RandomVideoPage = () => {
   const dispatch = useAppDispatch();
   const randomVideo = useAppSelector(state => state.randomVideo.currentVideo);
   const hasPreviousVideo = useAppSelector(state => state.randomVideo.hasPreviousVideo);
+  const hasNextVideo = useAppSelector(state => state.randomVideo.hasNextVideo);
   let { slug } = useParams();
   let location = useLocation();
 
@@ -23,8 +24,7 @@ export const RandomVideoPage = () => {
 
 
   useEffect(() => {
-    dispatch(reset())
-    dispatch(nextVideo(slug));
+    dispatch(fetchVideos(slug));
   }, [dispatch, slug]);
 
 
@@ -97,15 +97,15 @@ export const RandomVideoPage = () => {
   }
 
   function dispatchNextVideo(): void {
-    dispatch(nextVideo(slug));
+    dispatch(nextVideo());
   }
 
   return (
-    <div>
+    <div className="video-page">
       <Row className="justify-content-center">
         <Col md="8">
-          <h1>{sanitizeString(randomVideo.name)}</h1>
-          <div className="video-responsive video-margin">
+          <h1 className="video-title">{sanitizeString(randomVideo.name)}</h1>
+          <div className="video-container video-responsive">
             <iframe
               width="853"
               height="480"
@@ -116,18 +116,20 @@ export const RandomVideoPage = () => {
             />
           </div>
           <div className="video-controls">
+            <div className="button-group">
               <Button onClick={dispatchPreviousVideo} disabled={!hasPreviousVideo}>Previous Video</Button>
-              <Button onClick={dispatchNextVideo}>Next Video</Button>
+              <Button onClick={dispatchNextVideo} disabled={!hasNextVideo}>{ hasNextVideo ? "Next Video" : "No Videos Left"}</Button>
+            </div>
           </div>
 
           {/* A call to action letting people know they can create their own video lists */}
-          <div className="text-center">
+          <div className="cta-container text-center">
             <p>
               {/* <Translate contentKey="randomVideo.createVideoList">Create your own video list</Translate> */}
               Create your own video list here!
             </p>
             <p>
-              <a className="btn btn-primary" href="/video-list/new">
+              <a className="btn btn-create-list" href="/video-list/new">
                 Create list
               </a>
             </p>

@@ -208,29 +208,30 @@ public class VideoListResource {
     }
 
     /**
-     * {@code GET  /video-lists/:slug/random-video} : get the "id" videoList.
+     * {@code GET  /video-lists/by-slug/:slug} : get the videos of a videoList with a specific slug.
      *
-     * @param slug the slug of the videoList to get a video from.
+     * @param slug the slug of the videoList to get.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the videoList, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/video-lists/{slug}/randomvideo")
-    public ResponseEntity<Video> getRandomVideo(@PathVariable @Pattern(regexp = "^(?!(api|internal-use)$)[a-zA-Z0-9-]+$", message = "Invalid slug") String slug) throws MethodArgumentNotValidException {
-        log.debug("REST request to get random video from {} slug : {}", slug);
+    @GetMapping("/video-lists/by-slug/{slug}")
+    public Set<Video> getVideosByVideoListSlug(@PathVariable @Pattern(regexp = "^(?!(api|internal-use)$)[a-zA-Z0-9-]+$", message = "Invalid slug") String slug){
+        log.debug("REST request to get videos from video list with slug: {}", slug);
 
         Optional<VideoList> videoList = videoListRepository.findOneWithEagerRelationshipsBySlug(slug);
         if (!videoList.isPresent()) {
-            throw new BadRequestAlertException("Invalid slug", ENTITY_NAME, "sluginvalid");
+            throw new BadRequestAlertException("Video list not found.", ENTITY_NAME, "videolistnotfound");
         }
-
 
         //get the list of videos from the videoList
         Set<Video> videos = videoList.get().getVideos();
         if (videos.isEmpty()) {
-            throw new BadRequestAlertException("Video list is empty", ENTITY_NAME, "videolistempty");
+            // taking advantage of JHipster's already provided error message display on the
+            // front end by just throwing an exception insetad of returning a 204 No Content.
+            throw new BadRequestAlertException("Video list is empty.", ENTITY_NAME, "videolistempty");
+            // return ResponseEntity.noContent().build(); // Return 204 No Content
         }
-        Optional<Video> randomVideo = videos.stream().skip(new Random().nextInt(videos.size())).findFirst();
-        // return result
-        return ResponseUtil.wrapOrNotFound(randomVideo);
+
+        return videos;
     }
 
     /**

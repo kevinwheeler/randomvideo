@@ -1,10 +1,21 @@
-.video-responsive {
-  position: relative;
-  overflow: hidden;
-  padding-bottom: 56.25%; /* 16:9 */
+.video-page {
+  display: grid;
+  gap: 1rem;
 }
 
-.video-responsive iframe {
+.video-title {
+  margin-bottom: 1rem;
+}
+
+.video-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  /* This padding-bottom represents the aspect ratio of the video (9 / 16 * 100 = 56.25%) */
+  padding-bottom: 56.25%; 
+}
+
+.video-container iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -12,7 +23,17 @@
   height: 100%;
 }
 
-.video-margin {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.btn-create-list {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.cta-container {
+  margin-top: 2rem;
 }
