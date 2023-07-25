@@ -22,7 +22,10 @@ export const SettingsPage = () => {
 
   useEffect(() => {
     if (successMessage) {
-      toast.success(translate(successMessage));
+      const rawHtml = translate(successMessage)[0].props.dangerouslySetInnerHTML.__html;
+      let doc = new DOMParser().parseFromString(rawHtml, "text/html");
+      let message = doc.body.textContent || "";
+      toast.success(message);
     }
   }, [successMessage]);
 

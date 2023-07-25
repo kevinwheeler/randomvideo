@@ -32,9 +32,15 @@ export const PasswordPage = () => {
 
   useEffect(() => {
     if (successMessage) {
-      toast.success(translate(successMessage));
+      const rawHtml = translate(successMessage)[0].props.dangerouslySetInnerHTML.__html;
+      let doc = new DOMParser().parseFromString(rawHtml, "text/html");
+      let message = doc.body.textContent || "";
+      toast.success(message);
     } else if (errorMessage) {
-      toast.error(translate(errorMessage));
+      const rawHtml = translate(errorMessage)[0].props.dangerouslySetInnerHTML.__html;
+      let doc = new DOMParser().parseFromString(rawHtml, "text/html");
+      let message = doc.body.textContent || "";
+      toast.error(message);
     }
     dispatch(reset());
   }, [successMessage, errorMessage]);

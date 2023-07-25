@@ -51,8 +51,8 @@ public class MailService {
         this.templateEngine = templateEngine;
     }
 
-    @Async
-    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) {
+//    @Async
+    public void sendEmail(String to, String subject, String content, boolean isMultipart, boolean isHtml) throws MessagingException, MailException {
         log.debug(
             "Send email[multipart '{}' and html '{}'] to '{}' with subject '{}' and content={}",
             isMultipart,
@@ -74,11 +74,12 @@ public class MailService {
             log.debug("Sent email to User '{}'", to);
         } catch (MailException | MessagingException e) {
             log.warn("Email could not be sent to user '{}'", to, e);
+            throw e;
         }
     }
 
-    @Async
-    public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
+//    @Async
+    public void sendEmailFromTemplate(User user, String templateName, String titleKey) throws MessagingException, MailException {
         if (user.getEmail() == null) {
             log.debug("Email doesn't exist for user '{}'", user.getLogin());
             return;
@@ -92,20 +93,20 @@ public class MailService {
         sendEmail(user.getEmail(), subject, content, false, true);
     }
 
-    @Async
-    public void sendActivationEmail(User user) {
+//    @Async
+    public void sendActivationEmail(User user) throws MessagingException, MailException {
         log.debug("Sending activation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendCreationEmail(User user) {
+    public void sendCreationEmail(User user) throws MessagingException, MailException{
         log.debug("Sending creation email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
     }
 
     @Async
-    public void sendPasswordResetMail(User user) {
+    public void sendPasswordResetMail(User user) throws MessagingException, MailException{
         log.debug("Sending password reset email to '{}'", user.getEmail());
         sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
     }
