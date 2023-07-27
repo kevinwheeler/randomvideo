@@ -24,10 +24,7 @@ export const PasswordResetInit = () => {
 
   useEffect(() => {
     if (successMessage) {
-      const rawHtml = translate(successMessage)[0].props.dangerouslySetInnerHTML.__html;
-      let doc = new DOMParser().parseFromString(rawHtml, "text/html");
-      let message = doc.body.textContent || "";
-      toast.success(message);
+      toast.success(translate(successMessage));
     }
   }, [successMessage]);
 
