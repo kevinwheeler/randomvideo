@@ -66,7 +66,7 @@ export const VideoListUpdate = () => {
     const entity = {
       ...videoListEntity,
       ...values,
-      videos: selectedVideoOptions.map(option => ({ id: option.value })),
+      videos: selectedVideoOptions ? selectedVideoOptions.map(option => ({ id: option.value })) : [],
     };
 
     if (isNew) {
