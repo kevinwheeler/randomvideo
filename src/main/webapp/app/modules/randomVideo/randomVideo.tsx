@@ -3,7 +3,7 @@ import { Button, Col, Row } from 'reactstrap';
 import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { fetchVideos, nextVideo, previousVideo } from './random-video-reducer';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import './random-video.scss';
 import { Translate, translate } from 'react-jhipster';
 
@@ -125,12 +125,12 @@ export const RandomVideoPage = () => {
           {/* A call to action letting people know they can create their own video lists */}
           <div className="cta-container text-center">
             <p>
-               <Translate contentKey="randomVideo.createVideoListDescription">Create your own video list here!</Translate>
+              <Translate contentKey="randomVideo.createVideoListDescription">Create your own video list here!</Translate>
             </p>
             <p>
-              <a className="btn btn-create-list" href="/video-list/new">
+              <Link className="btn btn-create-list" to="/video-list/new">
                 {translate("randomVideo.createVideoListButton")}
-              </a>
+              </Link>
             </p>
           </div>
         </Col>
