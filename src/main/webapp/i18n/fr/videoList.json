@@ -15,12 +15,15 @@
         "question": "Êtes-vous certain de vouloir supprimer le Video List {{ id }} ?"
       },
       "detail": {
-        "title": "Video List"
+        "title": "liste de vidéos"
       },
       "id": "ID",
-      "name": "Name",
-      "slug": "Slug",
-      "video": "Video",
+      "name": "Nom",
+      "fullUrl": "URL complète",
+      "slug": "Blocage d'URL",
+      "slugAttributeDescription": "Une vidéo aléatoire de votre liste de vidéos sera accessible au public sur www.randomvideo.com/{votre limace d'url}",
+      "videoAttributeDescription": "Vous devrez ajouter des vidéos avant de pouvoir les ajouter à votre liste de vidéos.",
+      "video": "Vidéo",
       "xUser": "X User"
     }
   }

@@ -113,14 +113,17 @@ public class AccountResource {
         if (existingUser.isPresent() && (!existingUser.get().getLogin().equalsIgnoreCase(userLogin))) {
             throw new EmailAlreadyUsedException();
         }
-        Optional<User> user = userRepository.findOneByLogin(userLogin);
+
+        final Optional<User> user = userRepository.findOneByLogin(userLogin);
         if (!user.isPresent()) {
             throw new AccountResourceException("User could not be found");
         }
+
+        String userEmail = user.get().getEmail();
         userService.updateUser(
             userDTO.getFirstName(),
             userDTO.getLastName(),
-            userDTO.getEmail(),
+            userEmail, // Don't let the user update their email address unless we later implement email verification.
             userDTO.getLangKey(),
             userDTO.getImageUrl()
         );

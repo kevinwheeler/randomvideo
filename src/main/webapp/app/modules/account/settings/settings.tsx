@@ -73,6 +73,7 @@ export const SettingsPage = () => {
               data-cy="lastname"
             />
             <ValidatedField
+              disabled
               name="email"
               label={translate('global.form.email.label')}
               placeholder={translate('global.form.email.placeholder')}

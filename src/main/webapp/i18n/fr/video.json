@@ -2,7 +2,7 @@
   "randomvideoApp": {
     "video": {
       "home": {
-        "title": "Videos",
+        "title": "Vidéos",
         "refreshListLabel": "Actualiser la liste",
         "createLabel": "Créer un nouveau Video",
         "createOrEditLabel": "Créer ou éditer un Video",
@@ -15,13 +15,14 @@
         "question": "Êtes-vous certain de vouloir supprimer le Video {{ id }} ?"
       },
       "detail": {
-        "title": "Video"
+        "title": "Vidéo"
       },
       "id": "ID",
-      "url": "Url",
-      "name": "Name",
+      "url": "URL de la vidéo Youtube",
+      "urlAttributeDescription": "Actuellement, seules les vidéos Youtube sont prises en charge. Veuillez copier et coller une URL de vidéo YouTube.",
+      "name": "Nom",
       "xUser": "X User",
-      "videoList": "Video List"
+      "videoList": "liste de vidéos"
     }
   }
 }

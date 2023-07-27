@@ -1,0 +1,9 @@
+{
+  "randomVideo": {
+    "nextVideo": "Next video",
+    "previousVideo": "Previous video",
+    "noVideosLeft": "No videos left",
+    "createVideoListDescription": "Create your own video list here!",
+    "createVideoListButton": "Create list"
+  }
+}

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Row } from 'reactstrap';
-import { Translate, translate} from 'react-jhipster';
 import { locales, languages } from 'app/config/translation';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { fetchVideos, nextVideo, previousVideo } from './random-video-reducer';
 import { useParams, useLocation } from 'react-router-dom';
 import './random-video.scss';
+import { Translate, translate } from 'react-jhipster';
 
 import { sanitizeUrl } from "@braintree/sanitize-url";
 
@@ -117,20 +117,19 @@ export const RandomVideoPage = () => {
           </div>
           <div className="video-controls">
             <div className="button-group">
-              <Button onClick={dispatchPreviousVideo} disabled={!hasPreviousVideo}>Previous Video</Button>
-              <Button onClick={dispatchNextVideo} disabled={!hasNextVideo}>{ hasNextVideo ? "Next Video" : "No Videos Left"}</Button>
+              <Button onClick={dispatchPreviousVideo} disabled={!hasPreviousVideo}>{translate("randomVideo.previousVideo")}</Button>
+              <Button onClick={dispatchNextVideo} disabled={!hasNextVideo}>{ hasNextVideo ? translate("randomVideo.nextVideo") : translate("randomVideo.noVideosLeft")}</Button>
             </div>
           </div>
 
           {/* A call to action letting people know they can create their own video lists */}
           <div className="cta-container text-center">
             <p>
-              {/* <Translate contentKey="randomVideo.createVideoList">Create your own video list</Translate> */}
-              Create your own video list here!
+               <Translate contentKey="randomVideo.createVideoListDescription">Create your own video list here!</Translate>
             </p>
             <p>
               <a className="btn btn-create-list" href="/video-list/new">
-                Create list
+                {translate("randomVideo.createVideoListButton")}
               </a>
             </p>
           </div>
