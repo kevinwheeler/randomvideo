@@ -8,8 +8,9 @@ const Footer = () => (
   <div className="footer page-content">
     <Row>
       <Col md="12">
-        <p>
-          {/* <Translate contentKey="footer">Your footer</Translate> */}
+        
+        <p className="footer">
+          Hire Me! Portfolio + Resume: <a href="https://www.kevinwheeler.net">https://www.kevinwheeler.net</a>
         </p>
       </Col>
     </Row>
