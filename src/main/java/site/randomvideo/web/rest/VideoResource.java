@@ -113,6 +113,7 @@ public class VideoResource {
 //            throw new BadRequestAlertException("You are not allowed to edit this video list", ENTITY_NAME, "notallowed");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
+        video.setXUser(currentXUser);
         Video result = videoRepository.save(video);
         return ResponseEntity
             .ok()
